@@ -81,6 +81,8 @@
 /**
  * Вспомогательный класс
  *
+ * {@link libbotobor.php Описание и примеры.}
+ *
  * @package Botobor
  */
 class Botobor
@@ -231,8 +233,9 @@ class Botobor
  *
  * Используйте дочерние классы для работы защиты форм.
  *
+ * {@link libbotobor.php Описание и примеры.}
+ *
  * @package Botobor
- * @see libbotobor.php
  */
 abstract class Botobor_Form
 {
@@ -383,6 +386,8 @@ abstract class Botobor_Form
  * $html = $bform->getCode();
  * </code>
  *
+ * {@link libbotobor.php Описание и примеры.}
+ *
  * @package Botobor
  * @since 0.1.0
  */
@@ -508,6 +513,8 @@ class Botobor_Form_HTML extends Botobor_Form
  *
  * Проверяет форму, принятую в обрабатываемом запросе. При этом проводится обратная замена
  * полей-приманок на исходные поля формы.
+ *
+ * {@link libbotobor.php Описание и примеры.}
  *
  * @package Botobor
  */
