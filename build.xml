@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ $Id$
+ -->
+
+<project name="libbotobor" default="checkstyle" basedir="./">
+
+	<property file="build.properties" />
+
+	<!-- ====================================================================================== -->
+
+	<target name="checkstyle" description="Check code style">
+
+		<!--
+			Check sources for coding standards
+		-->
+		<phpcodesniffer
+			standard="${phpcs.standard}"
+			haltonerror="false"
+		>
+			<formatter
+				type="${phpcs.format}"
+				outfile="${phpcs.output}"
+			/>
+			<fileset dir="src">
+				<include name="**" />
+				<exclude name=".svn" />
+			</fileset>
+		</phpcodesniffer>
+
+	</target>
+
+	<!-- ====================================================================================== -->
+
+	<target name="docs" description="Generate documentation">
+
+		<delete dir="${docs.dir}" includeemptydirs="true" failonerror="true" />
+
+		<phpdoc
+			title="libBotobor API"
+		  destdir="${docs.dir}"
+		  sourcecode="no"
+			parseprivate="no"
+		  output="${docs.converter}">
+		   <fileset dir="src">
+		      <include name="**/*.php" />
+		   </fileset>
+		   <projdocfileset dir=".">
+		      <include name="README" />
+		      <include name="INSTALL" />
+		      <include name="CHANGELOG" />
+		   </projdocfileset>
+		</phpdoc>
+
+	</target>
+
+	<!-- ====================================================================================== -->
+
+</project>
