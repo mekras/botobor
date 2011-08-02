@@ -19,10 +19,14 @@ class Botobor_Keeper_Test extends PHPUnit_Framework_TestCase
 	 */
 	public function test_isHuman()
 	{
+		$this->assertFalse(Botobor_Keeper::isHuman());
+
 		$p_isHuman = new ReflectionProperty('Botobor_Keeper', 'isHuman');
 		$p_isHuman->setAccessible(true);
 		$p_isHuman->setValue('Botobor_Keeper', true);
+
 		$this->assertTrue(Botobor_Keeper::isHuman());
+
 	}
 	//-----------------------------------------------------------------------------
 

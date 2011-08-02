@@ -34,7 +34,7 @@
  * <code>
  * require 'libbotobor.php';
  * …
- * if (Botobor_Validator::isHuman())
+ * if (Botobor_Keeper::isHuman())
  * {
  * 	// Форма отправлена человеком, можно обрабатывать её.
  * }
@@ -61,13 +61,14 @@
  *
  * В этом примере поле «name» будет сделано приманкой. При этом имя настоящего поля «name» будет
  * заменено на случайное значение. Обратное преобразование будет сделано во время вызова
- * {@link Botobor_Validator::isHuman()}.
+ * любого проверяющего метода {@link Botobor_Keeper}, например{@link Botobor_Keeper::isHuman()}.
+ *
  * <code>
  * $bform = new Botobor_Form_HTML($html);
  * $bform->setHoneypot('name');
  * </code>
  *
- * Подробнее об опциях см. {@link Botobor_Form::__construct()}.
+ * Подробнее см. {@link Botobor_Keeper::handleRequest()}.
  *
  * <b>ЛИЦЕНЗИЯ</b>
  *
@@ -619,12 +620,20 @@ class Botobor_Form_HTML extends Botobor_Form
  * Проверяет форму, принятую в обрабатываемом запросе. При этом проводится обратная замена
  * полей-приманок на исходные поля формы.
  *
- * {@link libbotobor.php Описание и примеры.}
- *
  * @package Botobor
+ * @link libbotobor.php Описание и примеры
+ * @see isHuman()
  */
 class Botobor_Keeper
 {
+	/**
+	 * Признак того, что запрос уже обработан
+	 *
+	 * @var bool
+	 * @since 0.1.0
+	 */
+	private static $isHandled = false;
+
 	/**
 	 * Признак того, что форму заполнил человек
 	 *
@@ -639,12 +648,20 @@ class Botobor_Keeper
 	 * Если в текущем запросе содержатся мета-данные Ботобора, они извлекаются и проверяются.
 	 * Проводится обратная замена полей-приманок на исходные поля формы.
 	 *
+	 * Этот метод вызывается автоматически из {@link isHuman()}. Но разработчики могут вызывать его
+	 * самостоятельно, если их приложение получает аргументы запроса не напрямую из $_GET или $_POST,
+	 * а через посредничество другого класса, который извлекает аргументы до обращения к
+	 * {@link isHuman()}. В этом случае надо вызвать {@link handleRequest()} до создания
+	 * класса-посредника.
+	 *
 	 * @return void
 	 *
 	 * @since 0.1.0
 	 */
 	public static function handleRequest()
 	{
+		self::$isHandled = true;
+
 		self::$isHuman = true;
 		switch (strtoupper(@$_SERVER['REQUEST_METHOD']))
 		{
@@ -709,6 +726,10 @@ class Botobor_Keeper
 	 */
 	public static function isHuman()
 	{
+		if (!self::$isHandled)
+		{
+			self::handleRequest();
+		}
 		return self::$isHuman;
 	}
 	//-----------------------------------------------------------------------------
