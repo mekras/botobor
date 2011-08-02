@@ -4,22 +4,6 @@ require_once SRC_ROOT . '/libbotobor.php';
 class Botobor_Form_HTML_Test extends PHPUnit_Framework_TestCase
 {
 	/**
-	 * @covers Botobor_Form_HTML::__construct
-	 */
-	public function test_construct()
-	{
-		$options = array('delay' => 123);
-		$form = new Botobor_Form_HTML('<form>', $options);
-		$p_delay = new ReflectionProperty('Botobor_Form_HTML', 'delay');
-		$p_delay->setAccessible(true);
-		$this->assertEquals(123, $p_delay->getValue($form));
-		$p_html = new ReflectionProperty('Botobor_Form_HTML', 'html');
-		$p_html->setAccessible(true);
-		$this->assertEquals('<form>', $p_html->getValue($form));
-	}
-	//-----------------------------------------------------------------------------
-
-	/**
 	 * @covers Botobor_Form_HTML::createInput
 	 */
 	public function test_createInput()

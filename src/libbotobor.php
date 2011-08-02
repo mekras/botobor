@@ -7,9 +7,12 @@
  * Основано на {@link http://nedbatchelder.com/text/stopbots.html}
  *
  * Считается, что форма заполнена роботом, если:
- * 1. между созданием формы и её отправкой прошло слишком мало времени (см. опцию delay ниже);
- * 2. между созданием формы и её отправкой прошло слишком много времени (см. опцию lifetime ниже);
- * 3. заполнено хотя бы одно поле-приманка (см. опцию honeypots ниже).
+ * 1. между созданием формы и её отправкой прошло слишком мало времени
+ *    (см. опцию {@link Botobor_Form::__construct() delay});
+ * 2. между созданием формы и её отправкой прошло слишком много времени
+ *    (см. опцию {@link Botobor_Form::__construct() lifetime});
+ * 3. заполнено хотя бы одно поле-приманка (см. опцию {@link Botobor_Form::__construct() honeypots}
+ *    или {@link Botobor_Form::setHoneypot()}).
  *
  * <b>ИСПОЛЬЗОВАНИЕ</b>
  *
@@ -39,12 +42,29 @@
  *
  * <b>Пример с опциями</b>
  *
- * Можно менять поведение Botobor при помощи опций. Например, для форм комментариев имеет смысл увеличить
- * параметр lifetime, т. к. посетители перед комментированием могут долго читать статью. Это можно сделать
- * так:
+ * Можно менять поведение Botobor при помощи опций. Например, для форм комментариев имеет смысл
+ * увеличить параметр lifetime, т. к. посетители перед комментированием могут долго читать статью.
+ * Это можно сделать так:
  *
  * <code>
  * $bform = new Botobor_Form_HTML($html, array('lifetime' => 60)); // 60 минут
+ * </code>
+ *
+ * Подробнее об опциях см. {@link Botobor_Form::__construct()}.
+ *
+ * <b>Пример с приманкой</b>
+ *
+ * Поля-примнаки предназначены для отлова роботов-пауков, которые находят формы самостоятельно.
+ * Такие роботы, как правило, ищут в форме знакомые поля (например, name) и заполняют их. Ботобор
+ * может добавить в форму скрытые от человека (при помощи CSS) поля с такими именами. Человек
+ * оставит эти поля пустыми (т. к. просто не увидит), а робот заполнит и тем самым выдаст себя.
+ *
+ * В этом примере поле «name» будет сделано приманкой. При этом имя настоящего поля «name» будет
+ * заменено на случайное значение. Обратное преобразование будет сделано во время вызова
+ * {@link Botobor_Validator::isHuman()}.
+ * <code>
+ * $bform = new Botobor_Form_HTML($html);
+ * $bform->setHoneypot('name');
  * </code>
  *
  * Подробнее об опциях см. {@link Botobor_Form::__construct()}.
@@ -240,6 +260,13 @@ class Botobor
 abstract class Botobor_Form
 {
 	/**
+	 * Защищаемая форма
+	 *
+	 * @var mixed
+	 */
+	protected $form;
+
+	/**
 	 * Наименьшая задержка в секундах допустимая между созаднием и получением формы
 	 *
 	 * @var int
@@ -281,13 +308,14 @@ abstract class Botobor_Form
 	 * Разработчики могут перекрыть метод {@link setOptions()} для самостоятельной обработки аргумента
 	 * $options.
 	 *
-	 * @param mixed $code     разметка формы
+	 * @param mixed $form     разметка формы
 	 * @param array $options  ассоциативный массив опций защиты
 	 *
 	 * @return Botobor_Form
 	 */
 	public function __construct($form, array $options = null)
 	{
+		$this->form = $form;
 		$this->delay = Botobor::getDefault('delay');
 		$this->lifetime = Botobor::getDefault('lifetime');
 		$this->setOptions($options);
@@ -394,25 +422,6 @@ abstract class Botobor_Form
 class Botobor_Form_HTML extends Botobor_Form
 {
 	/**
-	 * Разметка формы
-	 */
-	protected $html;
-
-	/**
-	 * Конструктор
-	 *
-	 * Аргумент $form должен содержать разметку формы в формате HTML.
-	 *
-	 * @see Botobor_Form::__construct()
-	 */
-	public function __construct($form, array $options = null)
-	{
-		parent::__construct($form, $options);
-		$this->html = $form;
-	}
-	//-----------------------------------------------------------------------------
-
-	/**
 	 * Возвращает разметку защищённой формы
 	 *
 	 * @return string  HTML
@@ -421,7 +430,7 @@ class Botobor_Form_HTML extends Botobor_Form
 	{
 		$this->prepareMetaData();
 
-		$html = $this->createHoneypots($this->html, $this->honeypots);
+		$html = $this->createHoneypots($this->form, $this->honeypots);
 
 		$botoborData =
 			'<div style="display: none;">' .
