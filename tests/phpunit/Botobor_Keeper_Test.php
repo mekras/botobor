@@ -116,5 +116,20 @@ class Botobor_Keeper_Test extends PHPUnit_Framework_TestCase
 	}
 	//-----------------------------------------------------------------------------
 
+	/**
+	 * @covers Botobor_Keeper::handleRequest
+	 */
+	public function test_handleRequest_custom()
+	{
+		$req = array('name' => 'RobotName', 'aaa' => 'HumanName');
+		$meta = new Botobor_MetaData();
+		$meta->aliases = array('aaa' => 'name');
+		$req[Botobor::META_FIELD_NAME] = $meta->encode();
+		Botobor_Keeper::handleRequest($req);
+		$this->assertFalse(Botobor_Keeper::isHuman());
+		$this->assertEquals('HumanName', $req['name']);
+	}
+	//-----------------------------------------------------------------------------
+
 	/* */
 }

@@ -11,8 +11,7 @@
  *    (см. опцию {@link Botobor_Form::__construct() delay});
  * 2. между созданием формы и её отправкой прошло слишком много времени
  *    (см. опцию {@link Botobor_Form::__construct() lifetime});
- * 3. заполнено хотя бы одно поле-приманка (см. опцию {@link Botobor_Form::__construct() honeypots}
- *    или {@link Botobor_Form::setHoneypot()}).
+ * 3. заполнено хотя бы одно поле-приманка (см. {@link Botobor_Form::setHoneypot()}).
  *
  * <b>ИСПОЛЬЗОВАНИЕ</b>
  *
@@ -654,28 +653,37 @@ class Botobor_Keeper
 	 * {@link isHuman()}. В этом случае надо вызвать {@link handleRequest()} до создания
 	 * класса-посредника.
 	 *
+	 * Другой способ, если значения извлечённые из $_GET/$_POST хранятся классом-посредником в
+	 * массиве — передать этот массив в качестве аргумента $req при вызове метода. В этом случае
+	 * будет обработан этот массив, а не $_GET/$_POST.
+	 *
+	 * @param array &$req  аргументы запроса
+	 *
 	 * @return void
 	 *
 	 * @since 0.1.0
 	 */
-	public static function handleRequest()
+	public static function handleRequest(array &$req = null)
 	{
 		self::$isHandled = true;
 
 		self::$isHuman = true;
-		switch (strtoupper(@$_SERVER['REQUEST_METHOD']))
+		if ($req === null)
 		{
-			case 'GET':
-				$req =& $_GET;
-			break;
+			switch (strtoupper(@$_SERVER['REQUEST_METHOD']))
+			{
+				case 'GET':
+					$req =& $_GET;
+				break;
 
-			case 'POST':
-				$req =& $_POST;
-			break;
+				case 'POST':
+					$req =& $_POST;
+				break;
 
-			default:
-				self::$isHuman = false;
-				return;
+				default:
+					self::$isHuman = false;
+					return;
+			}
 		}
 
 		if (!isset($req[Botobor::META_FIELD_NAME]))
