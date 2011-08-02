@@ -527,7 +527,7 @@ class Botobor_Form_HTML extends Botobor_Form
  *
  * @package Botobor
  */
-class Botobor_Validator
+class Botobor_Keeper
 {
 	/**
 	 * Возвращает true если форму отправил человек

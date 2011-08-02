@@ -8,7 +8,7 @@ PHP_CodeCoverage_Filter::getInstance()->addDirectoryToWhitelist('../../src');
 require_once 'Botobor_Test.php';
 require_once 'Botobor_Form_Test.php';
 require_once 'Botobor_Form_HTML_Test.php';
-require_once 'Botobor_Validator_Test.php';
+require_once 'Botobor_Keeper_Test.php';
 
 class AllTests
 {
@@ -19,7 +19,7 @@ class AllTests
 		$suite->addTestSuite('Botobor_Test');
 		$suite->addTestSuite('Botobor_Form_Test');
 		$suite->addTestSuite('Botobor_Form_HTML_Test');
-		$suite->addTestSuite('Botobor_Validator_Test');
+		$suite->addTestSuite('Botobor_Keeper_Test');
 
 		return $suite;
 	}
