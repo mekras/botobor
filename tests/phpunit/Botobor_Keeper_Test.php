@@ -1,149 +1,114 @@
 <?php
+require_once dirname(__FILE__) . '/bootstrap.php';
 require_once SRC_ROOT . '/libbotobor.php';
 
 class Botobor_Keeper_Test extends PHPUnit_Framework_TestCase
 {
 	/**
-	 * @covers Botobor_Keeper::importMetaData
+	 * @see PHPUnit_Framework_TestCase::tearDown()
 	 */
-	public function test_importMetaData()
+	protected function tearDown()
 	{
-		$m_importMetaData = new ReflectionMethod('Botobor_Keeper', 'importMetaData');
-		$m_importMetaData->setAccessible(true);
-		$this->assertNull($m_importMetaData->invoke('Botobor_Keeper', 'test'));
-
-		$_SERVER['REQUEST_METHOD'] = 'POST';
-		$_POST['test'] = 'test';
-		$this->assertNull($m_importMetaData->invoke('Botobor_Keeper', 'test'));
-
-		$data = array(
-			'aliases' => array(),
-			'timestamp' => time(),
-			'delay' => 10,
-			'lifetime' => 30,
-			'referer' => 'http://example.org/index.php'
-		);
-		Botobor::setSecret('secret');
-		$meta = serialize($data);
-		if (function_exists('gzdeflate'))
-		{
-			$meta = gzdeflate($meta);
-		}
-		$meta = base64_encode($meta);
-		$meta = Botobor::sign($meta);
-
-		$_POST['test'] = $meta;
-		$this->assertEquals($data, $m_importMetaData->invoke('Botobor_Keeper', 'test'));
-
-		$_SERVER['REQUEST_METHOD'] = 'get';
-		$_GET['test'] = $meta;
-		$this->assertEquals($data, $m_importMetaData->invoke('Botobor_Keeper', 'test'));
+		$p_isHuman = new ReflectionProperty('Botobor_Keeper', 'isHuman');
+		$p_isHuman->setAccessible(true);
+		$p_isHuman->setValue('Botobor_Keeper', false);
 	}
 	//-----------------------------------------------------------------------------
-
 	/**
 	 * @covers Botobor_Keeper::isHuman
 	 */
 	public function test_isHuman()
 	{
-		Botobor::setSecret('secret');
-		$_SERVER['REQUEST_METHOD'] = 'POST';
-
-		$this->assertFalse(Botobor_Keeper::isHuman());
-
-		$data = array(
-			'aliases' => array(),
-			'timestamp' => time(),
-			'delay' => 10,
-			'lifetime' => 30,
-			'referer' => 'http://example.org/index.php'
-		);
-		$meta = serialize($data);
-		if (function_exists('gzdeflate'))
-		{
-			$meta = gzdeflate($meta);
-		}
-		$meta = base64_encode($meta);
-		$meta = Botobor::sign($meta);
-		$_POST['botobor_meta_data'] = $meta;
-		$this->assertFalse(Botobor_Keeper::isHuman());
-
-
-		$data = array(
-			'aliases' => array(),
-			'timestamp' => time() - 35 * 60,
-			'delay' => 10,
-			'lifetime' => 30,
-			'referer' => 'http://example.org/index.php'
-		);
-		$meta = serialize($data);
-		if (function_exists('gzdeflate'))
-		{
-			$meta = gzdeflate($meta);
-		}
-		$meta = base64_encode($meta);
-		$meta = Botobor::sign($meta);
-		$_POST['botobor_meta_data'] = $meta;
-		$this->assertFalse(Botobor_Keeper::isHuman());
-
-
-		$data = array(
-			'aliases' => array(),
-			'timestamp' => time() - 15,
-			'delay' => 10,
-			'lifetime' => 30,
-			'referer' => 'http://example.org/index.php'
-		);
-		$meta = serialize($data);
-		if (function_exists('gzdeflate'))
-		{
-			$meta = gzdeflate($meta);
-		}
-		$meta = base64_encode($meta);
-		$meta = Botobor::sign($meta);
-		$_POST['botobor_meta_data'] = $meta;
-		$this->assertFalse(Botobor_Keeper::isHuman());
-
-		$_SERVER['HTTP_REFERER'] = 'http://example.org/index.php';
+		$p_isHuman = new ReflectionProperty('Botobor_Keeper', 'isHuman');
+		$p_isHuman->setAccessible(true);
+		$p_isHuman->setValue('Botobor_Keeper', true);
 		$this->assertTrue(Botobor_Keeper::isHuman());
+	}
+	//-----------------------------------------------------------------------------
 
-
-		$data = array(
-			'aliases' => array('a' => 'name'),
-			'timestamp' => time() - 15,
-			'delay' => 10,
-			'lifetime' => 30
-		);
-		$meta = serialize($data);
-		if (function_exists('gzdeflate'))
-		{
-			$meta = gzdeflate($meta);
-		}
-		$meta = base64_encode($meta);
-		$meta = Botobor::sign($meta);
-		$_POST['botobor_meta_data'] = $meta;
-		$_POST['a'] = 'value';
-		$this->assertTrue(Botobor_Keeper::isHuman());
+	/**
+	 * @covers Botobor_Keeper::handleRequest
+	 */
+	public function test_handleRequest()
+	{
+		Botobor_Keeper::handleRequest();
+		$this->assertFalse(Botobor_Keeper::isHuman());
 
 
 		$_SERVER['REQUEST_METHOD'] = 'GET';
-		$data = array(
-					'aliases' => array('a' => 'name'),
-					'timestamp' => time() - 15,
-					'delay' => 10,
-					'lifetime' => 30
-		);
-		$meta = serialize($data);
-		if (function_exists('gzdeflate'))
-		{
-			$meta = gzdeflate($meta);
-		}
-		$meta = base64_encode($meta);
-		$meta = Botobor::sign($meta);
-		$_GET['botobor_meta_data'] = $meta;
-		$_GET['a'] = 'value';
-		$_GET['name'] = 'value';
+		Botobor_Keeper::handleRequest();
 		$this->assertFalse(Botobor_Keeper::isHuman());
+
+
+		$_SERVER['REQUEST_METHOD'] = 'POST';
+		$_POST[Botobor::META_FIELD_NAME] = true;
+		Botobor_Keeper::handleRequest();
+		$this->assertFalse(Botobor_Keeper::isHuman());
+
+
+		$meta = new Botobor_MetaData();
+		$meta->aliases = array('aaa' => 'name');
+		$_POST[Botobor::META_FIELD_NAME] = $meta->encode();
+		$_POST['name'] = 'RobotName';
+		$_POST['aaa'] = 'HumanName';
+		Botobor_Keeper::handleRequest();
+		$this->assertFalse(Botobor_Keeper::isHuman());
+		$this->assertEquals('HumanName', $_POST['name']);
+
+
+		$meta = new Botobor_MetaData();
+		$_POST[Botobor::META_FIELD_NAME] = $meta->encode() . 'break_sign';
+		Botobor_Keeper::handleRequest();
+		$this->assertFalse(Botobor_Keeper::isHuman());
+
+
+		$meta = new Botobor_MetaData();
+		$meta->timestamp = time();
+		$meta->delay = 10;
+		$_POST[Botobor::META_FIELD_NAME] = $meta->encode();
+		Botobor_Keeper::handleRequest();
+		$this->assertFalse(Botobor_Keeper::isHuman());
+
+
+		$meta = new Botobor_MetaData();
+		$meta->timestamp = time() - 11 * 60;
+		$meta->lifetime = 10;
+		$_POST[Botobor::META_FIELD_NAME] = $meta->encode();
+		Botobor_Keeper::handleRequest();
+		$this->assertFalse(Botobor_Keeper::isHuman());
+
+
+		$meta = new Botobor_MetaData();
+		$meta->timestamp = time() - 15;
+		$meta->delay = 10;
+		$meta->lifetime = 10;
+		$meta->referer = 'http://example.org/index.php';
+		$_POST[Botobor::META_FIELD_NAME] = $meta->encode();
+		Botobor_Keeper::handleRequest();
+		$this->assertFalse(Botobor_Keeper::isHuman());
+
+
+		$meta = new Botobor_MetaData();
+		$meta->timestamp = time() - 15;
+		$meta->delay = 10;
+		$meta->lifetime = 10;
+		$meta->referer = 'http://example.org/index.php';
+		$_POST[Botobor::META_FIELD_NAME] = $meta->encode();
+		$_SERVER['HTTP_REFERER'] = 'http://example.org/';
+		Botobor_Keeper::handleRequest();
+		$this->assertFalse(Botobor_Keeper::isHuman());
+
+
+
+		$meta = new Botobor_MetaData();
+		$meta->timestamp = time() - 15;
+		$meta->delay = 10;
+		$meta->lifetime = 10;
+		$meta->referer = 'http://example.org/index.php';
+		$_POST[Botobor::META_FIELD_NAME] = $meta->encode();
+		$_SERVER['HTTP_REFERER'] = 'http://example.org/index.php';
+		Botobor_Keeper::handleRequest();
+		$this->assertTrue(Botobor_Keeper::isHuman());
 	}
 	//-----------------------------------------------------------------------------
 

@@ -1,6 +1,6 @@
 <?php
 /**
- * libBotobor
+ * Ботобор
  *
  * Библиотека для защиты веб-форм от спама
  *
@@ -108,6 +108,14 @@
 class Botobor
 {
 	/**
+	 * Имя поля для мета-данных
+	 *
+	 * @var string
+	 * @since 0.1.0
+	 */
+	const META_FIELD_NAME = 'botobor_meta_data';
+
+	/**
 	 * Секретная строка для подписывания мета-данных
 	 *
 	 * @var string
@@ -125,7 +133,7 @@ class Botobor
 		// Наибольшая задержка в минутах допустимая между созаднием и получением формы
 		'lifetime' => 30,
 		// Имена для приманок
-		'honeypotNames' => array(
+		'honeypots' => array(
 			'name', 'mail', 'email'
 		),
 	);
@@ -249,6 +257,133 @@ class Botobor
 
 
 /**
+ * Мета-данные формы
+ *
+ * @package Botobor
+ * @since 0.1.0
+ */
+class Botobor_MetaData
+{
+	/**
+	 * Мета-данные
+	 *
+	 * @var array
+	 * @see __get(), __set()
+	 */
+	private $data = array();
+
+	/**
+	 * Признак достоверности данных
+	 *
+	 * @var bool
+	 * @see isValid()
+	 */
+	private $isValid = true;
+
+	/**
+	 * Возвращает элемент мета-данных
+	 *
+	 * @param string $key
+	 *
+	 * @return mixed
+	 *
+	 * @since 0.1.0
+	 */
+	public function __get($key)
+	{
+		return isset($this->data[$key]) ? $this->data[$key] : null;
+	}
+	//-----------------------------------------------------------------------------
+
+	/**
+	 * Устанавливает элемент мета-данных
+	 *
+	 * @param string $key
+	 * @param mixed  $value
+	 *
+	 * @return void
+	 *
+	 * @since 0.1.0
+	 */
+	public function __set($key, $value)
+	{
+		if (is_array($value))
+		{
+			$value = new ArrayObject($value);
+		}
+		$this->data[$key] = $value;
+	}
+	//-----------------------------------------------------------------------------
+
+	/**
+	 * Возвращает true если данные достоверны
+	 *
+	 * @return bool
+	 *
+	 * @since 0.1.0
+	 */
+	public function isValid()
+	{
+		return $this->isValid;
+	}
+	//-----------------------------------------------------------------------------
+
+	/**
+	 * Кодирует мета-данные
+	 *
+	 * @return string  закодированные данные
+	 *
+	 * @since 0.1.0
+	 */
+	public function encode()
+	{
+		$data = serialize($this->data);
+		if (function_exists('gzdeflate'))
+		{
+			$data = gzdeflate($data);
+		}
+		$data = base64_encode($data);
+		$data = Botobor::sign($data);
+		return $data;
+	}
+	//-----------------------------------------------------------------------------
+
+	/**
+	 * Декодирует мета-данные
+	 *
+	 * @param string $encoded  закодированные данные
+	 *
+	 * @return void
+	 *
+	 * @since 0.1.0
+	 */
+	public function decode($encoded)
+	{
+		$signature = substr($encoded, -32);
+		$data = substr($encoded, 0, -32);
+		$validSignature = Botobor::signature($data);
+		$this->isValid = $signature == $validSignature;
+
+		if ($data)
+		{
+			$data = base64_decode($data);
+			if (function_exists('gzinflate'))
+			{
+				$data = gzinflate($data);
+			}
+			$data = unserialize($data);
+			if ($data)
+			{
+				$this->data = $data;
+			}
+		}
+	}
+	//-----------------------------------------------------------------------------
+}
+
+
+
+/**
  * Абстрактная обёртка для защиты веб-формы
  *
  * Используйте дочерние классы для работы защиты форм.
@@ -267,18 +402,12 @@ abstract class Botobor_Form
 	protected $form;
 
 	/**
-	 * Наименьшая задержка в секундах допустимая между созаднием и получением формы
+	 * Мета-данные
 	 *
-	 * @var int
+	 * @var Botobor_MetaData
+	 * @since 0.1.0
 	 */
-	protected $delay;
-
-	/**
-	 * Наибольшая задержка в минутах допустимая между созаднием и получением формы
-	 *
-	 * @var int
-	 */
-	protected $lifetime;
+	protected $meta;
 
 	/**
 	 * Приманки
@@ -286,13 +415,6 @@ abstract class Botobor_Form
 	 * @var array
 	 */
 	protected $honeypots = array();
-
-	/**
-	 * Мета-данные формы
-	 */
-	protected $meta = array(
-		'aliases' => array(),
-	);
 
 	/**
 	 * Конструктор
@@ -303,22 +425,57 @@ abstract class Botobor_Form
 	 * Допустимые опции:
 	 * - delay — наименьшая задержка в секундах допустимая между созаднием и получением формы
 	 * - lifetime — наибольшая задержка в минутах допустимая между созаднием и получением формы
-	 * - honeypot — массив имён для полей-приманок
 	 *
-	 * Разработчики могут перекрыть метод {@link setOptions()} для самостоятельной обработки аргумента
-	 * $options.
+	 * Так же эти значения можно установить через методы {@link setDelay()}, {@link setLifetime()}.
 	 *
 	 * @param mixed $form     разметка формы
 	 * @param array $options  ассоциативный массив опций защиты
 	 *
 	 * @return Botobor_Form
 	 */
-	public function __construct($form, array $options = null)
+	public function __construct($form, array $options = array())
 	{
 		$this->form = $form;
-		$this->delay = Botobor::getDefault('delay');
-		$this->lifetime = Botobor::getDefault('lifetime');
-		$this->setOptions($options);
+		$this->meta = new Botobor_MetaData();
+
+		$this->setDelay(isset($options['delay']) ? $options['delay'] : Botobor::getDefault('delay'));
+		$this->setLifetime(
+			isset($options['lifetime']) ? $options['lifetime'] : Botobor::getDefault('lifetime'));
+		$this->honeypots = Botobor::getDefault('honeypots');
+
+		$this->meta->timestamp = time();
+
+		if (isset($_SERVER['REQUEST_URI']) && $_SERVER['HTTP_HOST'])
+		{
+			$this->meta->referer = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] ? 'https' : 'http';
+			$this->meta->referer .= '://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+		}
+	}
+	//-----------------------------------------------------------------------------
+
+	/**
+	 * Устанавливает наименьшую допустимую задержку перед отправкой формы
+	 *
+	 * @param int $seconds  количество секунд
+	 *
+	 * @return void
+	 */
+	public function setDelay($seconds)
+	{
+		$this->meta->delay = $seconds;
+	}
+	//-----------------------------------------------------------------------------
+
+	/**
+	 * Устанавливает наибольшую допустимую задержку перед отправкой формы
+	 *
+	 * @param int $minutes  количество минут
+	 *
+	 * @return void
+	 */
+	public function setLifetime($minutes)
+	{
+		$this->meta->lifetime = $minutes;
 	}
 	//-----------------------------------------------------------------------------
 
@@ -338,71 +495,11 @@ abstract class Botobor_Form
 	/**
 	 * Метод должен возвращать изменённый код формы
 	 *
-	 * Используйте {@link prepareMetaData()} для подготовки {@link $meta}.
-	 * Используйте {@link encodeMetaData()} для кодирования {@link $meta} в строку.
+	 * Используйте {@link Botobor_MetaData::encode()} для кодирования {@link $meta} в строку.
 	 *
 	 * @return mixed
 	 */
 	abstract public function getCode();
-	//-----------------------------------------------------------------------------
-
-	/**
-	 * Устанавливает значения опций из переданного массива
-	 *
-	 * @param array $options
-	 *
-	 * @return void
-	 */
-	protected function setOptions(array $options = null)
-	{
-		if ($options)
-		{
-			foreach ($options as $key => $value)
-			{
-				if (property_exists($this, $key))
-				{
-					$this->$key = $value;
-				}
-			}
-		}
-	}
-	//-----------------------------------------------------------------------------
-
-	/**
-	 * Подготавливает мета-данные
-	 *
-	 * @return void
-	 */
-	protected function prepareMetaData()
-	{
-		$this->meta['timestamp'] = time();
-		$this->meta['delay'] = $this->delay;
-		$this->meta['lifetime'] = $this->lifetime;
-
-		if (isset($_SERVER['REQUEST_URI']) && $_SERVER['HTTP_HOST'])
-		{
-			$this->meta['referer'] = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] ? 'https' : 'http';
-			$this->meta['referer'] .= '://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
-		}
-	}
-	//-----------------------------------------------------------------------------
-
-	/**
-	 * Кодирует мета-данные
-	 *
-	 * @return string  закодированные данные
-	 */
-	protected function encodeMetaData()
-	{
-		$data = serialize($this->meta);
-		if (function_exists('gzdeflate'))
-		{
-			$data = gzdeflate($data);
-		}
-		$data = base64_encode($data);
-		$data = Botobor::sign($data);
-		return $data;
-	}
 	//-----------------------------------------------------------------------------
 }
 
@@ -428,13 +525,11 @@ class Botobor_Form_HTML extends Botobor_Form
 	 */
 	public function getCode()
 	{
-		$this->prepareMetaData();
-
 		$html = $this->createHoneypots($this->form, $this->honeypots);
 
 		$botoborData =
 			'<div style="display: none;">' .
-			$this->createInput('hidden', 'botobor_meta_data', $this->encodeMetaData()) .
+			$this->createInput('hidden', Botobor::META_FIELD_NAME, $this->meta->encode()) .
 			'</div>';
 
 		$html = preg_replace('/(<form[^>]*>)/si', '$1'.$botoborData, $html);
@@ -482,6 +577,7 @@ class Botobor_Form_HTML extends Botobor_Form
 	protected function createHoneypots($html, array $names)
 	{
 		$honeypots = '';
+		$this->meta->aliases = array();
 		foreach ($names as $name)
 		{
 			$p = strpos($html, 'name="' . $name . '"');
@@ -499,7 +595,7 @@ class Botobor_Form_HTML extends Botobor_Form
 				$alias .= chr(mt_rand(ord('a'), ord('z')));
 			}
 
-			$this->meta['aliases'][$alias] = $name;
+			$this->meta->aliases[$alias] = $name;
 
 			$html = substr_replace($html, $alias, $p + 6, strlen($name));
 		}
@@ -530,103 +626,90 @@ class Botobor_Form_HTML extends Botobor_Form
 class Botobor_Keeper
 {
 	/**
+	 * Признак того, что форму заполнил человек
+	 *
+	 * @var bool
+	 * @since 0.1.0
+	 */
+	private static $isHuman = false;
+
+	/**
+	 * Обрабатывает текущий запрос
+	 *
+	 * Если в текущем запросе содержатся мета-данные Ботобора, они извлекаются и проверяются.
+	 * Проводится обратная замена полей-приманок на исходные поля формы.
+	 *
+	 * @return void
+	 *
+	 * @since 0.1.0
+	 */
+	public static function handleRequest()
+	{
+		self::$isHuman = true;
+		switch (strtoupper(@$_SERVER['REQUEST_METHOD']))
+		{
+			case 'GET':
+				$req =& $_GET;
+			break;
+
+			case 'POST':
+				$req =& $_POST;
+			break;
+
+			default:
+				self::$isHuman = false;
+				return;
+		}
+
+		if (!isset($req[Botobor::META_FIELD_NAME]))
+		{
+			self::$isHuman = false;
+			return;
+		}
+
+		$meta = new Botobor_MetaData();
+		$meta->decode($req[Botobor::META_FIELD_NAME]);
+
+		if ($meta->aliases)
+		{
+			foreach ($meta->aliases as $alias => $name)
+			{
+				if (isset($req[$name]) && $req[$name])
+				{
+					self::$isHuman = false;
+				}
+
+				$req[$name] = @$req[$alias];
+				unset($req[$alias]);
+			}
+		}
+
+		if (
+			!self::$isHuman ||
+			!$meta->isValid() ||
+			time() - $meta->timestamp < $meta->delay ||
+			time() - $meta->timestamp > $meta->lifetime * 60 ||
+			(
+				$meta->referer &&
+				(!isset($_SERVER['HTTP_REFERER']) || $meta->referer != $_SERVER['HTTP_REFERER'])
+			)
+		)
+		{
+			self::$isHuman = false;
+			return;
+		}
+		self::$isHuman = true;
+	}
+	//-----------------------------------------------------------------------------
+
+	/**
 	 * Возвращает true если форму отправил человек
 	 *
 	 * @return bool
 	 */
 	public static function isHuman()
 	{
-		$meta = self::importMetaData('botobor_meta_data');
-
-		if (!$meta)
-		{
-			return false;
-		}
-
-		if (time() - $meta['timestamp'] < $meta['delay'])
-		{
-			return false;
-		}
-
-		if (time() - $meta['timestamp'] > $meta['lifetime'] * 60)
-		{
-			return false;
-		}
-
-		if (
-			isset($meta['referer']) &&
-			(!isset($_SERVER['HTTP_REFERER']) || $meta['referer'] != $_SERVER['HTTP_REFERER'])
-			)
-		{
-			return false;
-		}
-
-		if (strcasecmp($_SERVER['REQUEST_METHOD'], 'POST') === 0)
-		{
-			$req =& $_POST;
-		}
-		else
-		{
-			$req =& $_GET;
-		}
-
-		if ($meta['aliases'])
-		{
-			foreach ($meta['aliases'] as $alias => $name)
-			{
-				if (isset($req[$name]) && $req[$name])
-				{
-					return false;
-				}
-
-				$req[$name] = $req[$alias];
-				unset($req[$alias]);
-			}
-		}
-
-		return true;
+		return self::$isHuman;
 	}
 	//-----------------------------------------------------------------------------
-
-	/**
-	 * Извлекает мета-данные из запроса
-	 *
-	 * @param string $name  имя аргумента запроса, хранящего мета-данные
-	 *
-	 * @return array
-	 */
-	private static function importMetaData($name)
-	{
-		switch (strtolower(@$_SERVER['REQUEST_METHOD']))
-		{
-			case 'get':
-				$data = @$_GET[$name];
-			break;
-
-			case 'post':
-				$data = @$_POST[$name];
-			break;
-
-			default:
-				$data = null;
-		}
-		if ($data)
-		{
-			$data = Botobor::verify($data);
-			if (!$data)
-			{
-				return null;
-			}
-
-			$data = base64_decode($data);
-			if (function_exists('gzinflate'))
-			{
-				$data = gzinflate($data);
-			}
-			$data = unserialize($data);
-		}
-		return $data;
-	}
-	//-----------------------------------------------------------------------------
-
 }

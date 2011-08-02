@@ -1,4 +1,5 @@
 <?php
+require_once dirname(__FILE__) . '/bootstrap.php';
 require_once SRC_ROOT . '/libbotobor.php';
 
 class Botobor_Form_HTML_Test extends PHPUnit_Framework_TestCase
@@ -39,14 +40,20 @@ class Botobor_Form_HTML_Test extends PHPUnit_Framework_TestCase
 	public function test_getCode()
 	{
 		$form = $this->getMockBuilder('Botobor_Form_HTML')->
-			setMethods(array('prepareMetaData', 'createHoneypots', 'createInput', 'encodeMetaData'))->
+			setMethods(array('createInput', 'createHoneypots'))->
 			setConstructorArgs(array('<form></form>'))->getMock();
-		$form->expects($this->once())->method('prepareMetaData');
-		$form->expects($this->once())->method('createHoneypots')->with('<form></form>', array())->
+		$form->expects($this->once())->method('createHoneypots')->
 			will($this->returnValue('<form><honeypots></form>'));
-		$form->expects($this->once())->method('encodeMetaData')->will($this->returnValue('[metadata]'));
 		$form->expects($this->once())->method('createInput')->
 			with('hidden', 'botobor_meta_data', '[metadata]')->will($this->returnValue('<meta>'));
+
+		$meta = $this->getMock('Botobor_MetaData', array('encode'));
+		$meta->expects($this->once())->method('encode')->will($this->returnValue('[metadata]'));
+
+		$p_meta = new ReflectionProperty('Botobor_Form', 'meta');
+		$p_meta->setAccessible(true);
+		$p_meta->setValue($form, $meta);
+
 		$this->assertEquals('<form><div style="display: none;"><meta></div><honeypots></form>',
 			$form->getCode());
 	}

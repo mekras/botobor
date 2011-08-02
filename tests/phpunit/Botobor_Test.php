@@ -1,4 +1,5 @@
 <?php
+require_once dirname(__FILE__) . '/bootstrap.php';
 require_once SRC_ROOT . '/libbotobor.php';
 
 class Botobor_Test extends PHPUnit_Framework_TestCase
