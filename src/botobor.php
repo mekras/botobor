@@ -19,7 +19,7 @@
  *
  * Файл, создающий форму:
  * <code>
- * require 'libbotobor.php';
+ * require 'botobor.php';
  * …
  * // Получите разметку формы тем способом, который предусмотрен у вас в проекте, например:
  * $html = $form->getHTML();
@@ -87,13 +87,11 @@
  * GNU с этой программой. Если Вы ее не получили, смотрите документ на
  * <http://www.gnu.org/licenses/>
  *
- * @version 0.1.0
+ * @version 0.2.0
  * @copyright 2008-2011, Михаил Красильников, <mihalych@vsepofigu.ru>
  * @license http://www.gnu.org/licenses/gpl.txt  GPL License 3
  * @author Михаил Красильников, <mihalych@vsepofigu.ru>
  * @package Botobor
- *
- * $Id$
  */
 
 
@@ -101,7 +99,7 @@
 /**
  * Вспомогательный класс
  *
- * {@link libbotobor.php Описание и примеры.}
+ * {@link botobor.php Описание и примеры.}
  *
  * @package Botobor
  */
@@ -121,6 +119,19 @@ class Botobor
 	 * @var string
 	 */
 	private static $secret = null;
+
+	/**
+	 * Проверки
+	 *
+	 * @var array
+	 * @since 0.2.0
+	 */
+	private static $checks = array(
+		'delay' => true,
+		'lifetime' => true,
+		'honeypots' => true,
+		'referer' => true,
+	);
 
 	/**
 	 * Значения по умолчанию опций защиты форм
@@ -253,6 +264,51 @@ class Botobor
 	}
 	//-----------------------------------------------------------------------------
 
+	/**
+	 * Возвращает список доступных проверок и их состояние (вкл/выкл)
+	 *
+	 * @return array  ассоциативный массив, ключи — имена проверок, значения — состояние
+	 *
+	 * @since 0.2.0
+	 */
+	public static function getChecks()
+	{
+		return self::$checks;
+	}
+	//-----------------------------------------------------------------------------
+
+	/**
+	 * Включает или отключает проверку
+	 *
+	 * @param string $check  имя проверки (см. {@link getChecks()})
+	 * @param bool   $state  новое состояние
+	 *
+	 * @throws InvalidArgumentException  при неверном типе любого аргумента
+	 *
+	 * @return void
+	 *
+	 * @since 0.2.0
+	 */
+	public static function setCheck($check, $state)
+	{
+		if (!is_string($check))
+		{
+			throw new InvalidArgumentException(
+				__METHOD__ . ' expects parameter 1 to be string, ' . gettype($check) . ' given');
+		}
+
+		if (!is_bool($state))
+		{
+			throw new InvalidArgumentException(
+				__METHOD__ . ' expects parameter 2 to be bool, ' . gettype($state) . ' given');
+		}
+
+		if (array_key_exists($check, self::$checks))
+		{
+			self::$checks[$check] = $state;
+		}
+	}
+	//-----------------------------------------------------------------------------
 }
 
 
@@ -437,6 +493,7 @@ abstract class Botobor_Form
 	{
 		$this->form = $form;
 		$this->meta = new Botobor_MetaData();
+		$this->meta->checks = Botobor::getChecks();
 
 		$this->setDelay(isset($options['delay']) ? $options['delay'] : Botobor::getDefault('delay'));
 		$this->setLifetime(
@@ -449,6 +506,39 @@ abstract class Botobor_Form
 		{
 			$this->meta->referer = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] ? 'https' : 'http';
 			$this->meta->referer .= '://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+		}
+	}
+	//-----------------------------------------------------------------------------
+
+	/**
+	 * Включает или отключает проверку
+	 *
+	 * @param string $check  имя проверки (см. {@link Botobor::getChecks()})
+	 * @param bool   $state  новое состояние
+	 *
+	 * @throws InvalidArgumentException  при неверном типе любого аргумента
+	 *
+	 * @return void
+	 *
+	 * @since 0.2.0
+	 */
+	public function setCheck($check, $state)
+	{
+		if (!is_string($check))
+		{
+			throw new InvalidArgumentException(
+				__METHOD__ . ' expects parameter 1 to be string, ' . gettype($check) . ' given');
+		}
+
+		if (!is_bool($state))
+		{
+			throw new InvalidArgumentException(
+				__METHOD__ . ' expects parameter 2 to be bool, ' . gettype($state) . ' given');
+		}
+
+		if (array_key_exists($check, $this->meta->checks))
+		{
+			$this->meta->checks[$check] = $state;
 		}
 	}
 	//-----------------------------------------------------------------------------
@@ -666,19 +756,22 @@ class Botobor_Keeper
 	public static function handleRequest(array &$req = null)
 	{
 		self::$isHandled = true;
-
 		self::$isHuman = true;
-		if ($req === null)
+
+		/*
+		 * Если аргументы не переданы, получаем их самостоятельно
+		 */
+		if (is_null($req))
 		{
 			switch (strtoupper(@$_SERVER['REQUEST_METHOD']))
 			{
 				case 'GET':
 					$req =& $_GET;
-				break;
+					break;
 
 				case 'POST':
 					$req =& $_POST;
-				break;
+					break;
 
 				default:
 					self::$isHuman = false;
@@ -686,15 +779,23 @@ class Botobor_Keeper
 			}
 		}
 
+		/* Проверяем наличие мета-данных */
 		if (!isset($req[Botobor::META_FIELD_NAME]))
 		{
 			self::$isHuman = false;
 			return;
 		}
 
+		/* Получаем мета-данные и проверяем их мета-данных */
 		$meta = new Botobor_MetaData();
 		$meta->decode($req[Botobor::META_FIELD_NAME]);
+		if (!$meta->isValid())
+		{
+			self::$isHuman = false;
+			return;
+		}
 
+		/* Проверяем поля-приманки */
 		if ($meta->aliases)
 		{
 			foreach ($meta->aliases as $alias => $name)
@@ -702,27 +803,49 @@ class Botobor_Keeper
 				if (isset($req[$name]) && $req[$name])
 				{
 					self::$isHuman = false;
+					// Не прерываем вполнение метода, чтобы восстановть правильные имена для всех параметров
 				}
 
 				$req[$name] = @$req[$alias];
 				unset($req[$alias]);
 			}
 		}
+		if (!self::$isHuman)
+		{
+			return;
+		}
 
+		/* Проверяем ссылающийся адрес */
 		if (
-			!self::$isHuman ||
-			!$meta->isValid() ||
-			time() - $meta->timestamp < $meta->delay ||
-			time() - $meta->timestamp > $meta->lifetime * 60 ||
-			(
-				$meta->referer &&
-				(!isset($_SERVER['HTTP_REFERER']) || $meta->referer != $_SERVER['HTTP_REFERER'])
-			)
+			@$meta->checks['referer'] &&
+			$meta->referer &&
+			(!isset($_SERVER['HTTP_REFERER']) || $meta->referer != $_SERVER['HTTP_REFERER'])
 		)
 		{
 			self::$isHuman = false;
 			return;
 		}
+
+		/* Проверяем задержку */
+		if (
+			$meta->checks['delay'] &&
+			(time() - $meta->timestamp < $meta->delay)
+		)
+		{
+			self::$isHuman = false;
+			return;
+		}
+
+		/* Проверяем время жизни */
+		if (
+			$meta->checks['lifetime'] &&
+			(time() - $meta->timestamp > $meta->lifetime * 60)
+		)
+		{
+			self::$isHuman = false;
+			return;
+		}
+
 		self::$isHuman = true;
 	}
 	//-----------------------------------------------------------------------------

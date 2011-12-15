@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit>
+	<filter>
+		<whitelist addUncoveredFilesFromWhitelist="true">
+			<file>../../src/botobor.php</file>
+		</whitelist>
+	</filter>
+
+	<testsuites>
+		<testsuite name="All tests">
+			<directory suffix="_Test.php">.</directory>
+		</testsuite>
+	</testsuites>
+
+</phpunit>

@@ -1,6 +1,6 @@
 <?php
 require_once dirname(__FILE__) . '/bootstrap.php';
-require_once SRC_ROOT . '/libbotobor.php';
+require_once SRC_ROOT . '/botobor.php';
 
 class Botobor_MetaData_Test extends PHPUnit_Framework_TestCase
 {

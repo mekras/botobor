@@ -1,6 +1,6 @@
 <?php
 require_once dirname(__FILE__) . '/bootstrap.php';
-require_once SRC_ROOT . '/libbotobor.php';
+require_once SRC_ROOT . '/botobor.php';
 
 class Botobor_Form_Test extends PHPUnit_Framework_TestCase
 {
@@ -29,6 +29,45 @@ class Botobor_Form_Test extends PHPUnit_Framework_TestCase
 		$p_honeypots = new ReflectionProperty('Botobor_Form', 'honeypots');
 		$p_honeypots->setAccessible(true);
 		$this->assertEquals(array('name', 'mail'), $p_honeypots->getValue($form));
+	}
+	//-----------------------------------------------------------------------------
+
+	/**
+	 * @covers Botobor_Form::setCheck
+	 */
+	public function test_setCheck()
+	{
+		$form = $this->getMockBuilder('Botobor_Form')->setConstructorArgs(array('<foo>'))->
+			setMethods(array('getCode'))->getMock();
+		$form->setCheck('referer', false);
+
+		$p_meta = new ReflectionProperty('Botobor_Form', 'meta');
+		$p_meta->setAccessible(true);
+		$this->assertFalse($p_meta->getValue($form)->checks['referer']);
+	}
+	//-----------------------------------------------------------------------------
+
+	/**
+	 * @covers Botobor_Form::setCheck
+	 * @expectedException InvalidArgumentException
+	 */
+	public function test_setCheck_arg_1()
+	{
+		$form = $this->getMockBuilder('Botobor_Form')->disableOriginalConstructor()->
+			setMethods(array('getCode'))->getMock();
+		$form->setCheck(array(), null);
+	}
+	//-----------------------------------------------------------------------------
+
+	/**
+	 * @covers Botobor_Form::setCheck
+	 * @expectedException InvalidArgumentException
+	 */
+	public function test_setCheck_arg_2()
+	{
+		$form = $this->getMockBuilder('Botobor_Form')->disableOriginalConstructor()->
+			setMethods(array('getCode'))->getMock();
+		$form->setCheck('foo', null);
 	}
 	//-----------------------------------------------------------------------------
 

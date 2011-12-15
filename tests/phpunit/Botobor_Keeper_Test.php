@@ -1,6 +1,6 @@
 <?php
 require_once dirname(__FILE__) . '/bootstrap.php';
-require_once SRC_ROOT . '/libbotobor.php';
+require_once SRC_ROOT . '/botobor.php';
 
 class Botobor_Keeper_Test extends PHPUnit_Framework_TestCase
 {
@@ -35,6 +35,12 @@ class Botobor_Keeper_Test extends PHPUnit_Framework_TestCase
 	 */
 	public function test_handleRequest()
 	{
+		$checks = Botobor::getChecks();
+		foreach ($checks as $check => $state)
+		{
+			Botobor::setCheck($check, true);
+		}
+
 		Botobor_Keeper::handleRequest();
 		$this->assertFalse(Botobor_Keeper::isHuman());
 
@@ -51,30 +57,36 @@ class Botobor_Keeper_Test extends PHPUnit_Framework_TestCase
 
 
 		$meta = new Botobor_MetaData();
+		$meta->checks = Botobor::getChecks();
 		$meta->aliases = array('aaa' => 'name');
-		$_POST[Botobor::META_FIELD_NAME] = $meta->encode();
-		$_POST['name'] = 'RobotName';
-		$_POST['aaa'] = 'HumanName';
-		Botobor_Keeper::handleRequest();
+		$data = array(
+			Botobor::META_FIELD_NAME => $meta->encode(),
+			'name' => 'RobotName',
+			'aaa' => 'HumanName',
+		);
+		Botobor_Keeper::handleRequest($data);
 		$this->assertFalse(Botobor_Keeper::isHuman());
-		$this->assertEquals('HumanName', $_POST['name']);
+		$this->assertEquals('HumanName', $data['name']);
 
 
 		$meta = new Botobor_MetaData();
+		$meta->checks = Botobor::getChecks();
 		$_POST[Botobor::META_FIELD_NAME] = $meta->encode() . 'break_sign';
 		Botobor_Keeper::handleRequest();
 		$this->assertFalse(Botobor_Keeper::isHuman());
 
 
 		$meta = new Botobor_MetaData();
+		$meta->checks = Botobor::getChecks();
 		$meta->timestamp = time();
 		$meta->delay = 10;
-		$_POST[Botobor::META_FIELD_NAME] = $meta->encode();
-		Botobor_Keeper::handleRequest();
+		$data = array(Botobor::META_FIELD_NAME => $meta->encode());
+		Botobor_Keeper::handleRequest($data);
 		$this->assertFalse(Botobor_Keeper::isHuman());
 
 
 		$meta = new Botobor_MetaData();
+		$meta->checks = Botobor::getChecks();
 		$meta->timestamp = time() - 11 * 60;
 		$meta->lifetime = 10;
 		$_POST[Botobor::META_FIELD_NAME] = $meta->encode();
@@ -83,6 +95,7 @@ class Botobor_Keeper_Test extends PHPUnit_Framework_TestCase
 
 
 		$meta = new Botobor_MetaData();
+		$meta->checks = Botobor::getChecks();
 		$meta->timestamp = time() - 15;
 		$meta->delay = 10;
 		$meta->lifetime = 10;
@@ -93,6 +106,7 @@ class Botobor_Keeper_Test extends PHPUnit_Framework_TestCase
 
 
 		$meta = new Botobor_MetaData();
+		$meta->checks = Botobor::getChecks();
 		$meta->timestamp = time() - 15;
 		$meta->delay = 10;
 		$meta->lifetime = 10;
@@ -103,8 +117,8 @@ class Botobor_Keeper_Test extends PHPUnit_Framework_TestCase
 		$this->assertFalse(Botobor_Keeper::isHuman());
 
 
-
 		$meta = new Botobor_MetaData();
+		$meta->checks = Botobor::getChecks();
 		$meta->timestamp = time() - 15;
 		$meta->delay = 10;
 		$meta->lifetime = 10;
