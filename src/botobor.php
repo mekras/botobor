@@ -615,7 +615,12 @@ class Botobor_Form_HTML extends Botobor_Form
 	 */
 	public function getCode()
 	{
-		$html = $this->createHoneypots($this->form, $this->honeypots);
+		$html = $this->form;
+
+		if ($this->meta->checks['honeypots'])
+		{
+			$html = $this->createHoneypots($html, $this->honeypots);
+		}
 
 		$botoborData =
 			'<div style="display: none;">' .

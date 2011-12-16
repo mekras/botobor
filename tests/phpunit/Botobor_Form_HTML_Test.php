@@ -48,6 +48,7 @@ class Botobor_Form_HTML_Test extends PHPUnit_Framework_TestCase
 			with('hidden', 'botobor_meta_data', '[metadata]')->will($this->returnValue('<meta>'));
 
 		$meta = $this->getMock('Botobor_MetaData', array('encode'));
+		$meta->checks = Botobor::getChecks();
 		$meta->expects($this->once())->method('encode')->will($this->returnValue('[metadata]'));
 
 		$p_meta = new ReflectionProperty('Botobor_Form', 'meta');
@@ -59,5 +60,31 @@ class Botobor_Form_HTML_Test extends PHPUnit_Framework_TestCase
 	}
 	//-----------------------------------------------------------------------------
 
+	/**
+	 * @link https://github.com/mekras/botobor/issues/2
+	 * @covers Botobor_Form_HTML::getCode
+	 */
+	public function test_issue2()
+	{
+		$form = $this->getMockBuilder('Botobor_Form_HTML')->
+			setMethods(array('createInput', 'createHoneypots'))->
+			setConstructorArgs(array('<form></form>'))->getMock();
+		$form->expects($this->any())->method('createHoneypots')->
+			will($this->returnValue('<form><honeypots></form>'));
+		$form->expects($this->any())->method('createInput')->
+			with('hidden', 'botobor_meta_data', '[metadata]')->will($this->returnValue('<meta>'));
+
+		$meta = $this->getMock('Botobor_MetaData', array('encode'));
+		$meta->checks = Botobor::getChecks();
+		$meta->expects($this->once())->method('encode')->will($this->returnValue('[metadata]'));
+
+		$p_meta = new ReflectionProperty('Botobor_Form', 'meta');
+		$p_meta->setAccessible(true);
+		$p_meta->setValue($form, $meta);
+
+		$form->setCheck('honeypots', false);
+		$this->assertEquals('<form><div style="display: none;"><meta></div></form>', $form->getCode());
+	}
+	//-----------------------------------------------------------------------------
 	/* */
 }
