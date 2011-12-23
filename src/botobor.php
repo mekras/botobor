@@ -161,7 +161,7 @@ class Botobor
 	 * @see setSecret()
 	 * @see signature()
 	 */
-	public static function secret()
+	public static function getSecret()
 	{
 		$secret = self::$secret ? self::$secret : filemtime(__FILE__);
 		return $secret;
@@ -175,7 +175,7 @@ class Botobor
 	 *
 	 * @return void
 	 *
-	 * @see secret()
+	 * @see getSecret()
 	 * @see signature()
 	 */
 	public static function setSecret($secret)
@@ -195,7 +195,7 @@ class Botobor
 	 */
 	public static function signature($data)
 	{
-		$signature = md5($data . self::secret());
+		$signature = md5($data . self::getSecret());
 		return $signature;
 	}
 	//-----------------------------------------------------------------------------

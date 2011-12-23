@@ -5,16 +5,16 @@ require_once SRC_ROOT . '/botobor.php';
 class Botobor_Test extends PHPUnit_Framework_TestCase
 {
 	/**
-	 * @covers Botobor::secret
+	 * @covers Botobor::getSecret
 	 * @covers Botobor::setSecret
 	 */
 	public function test_secrets()
 	{
-		$this->assertEquals(filemtime(SRC_ROOT . '/botobor.php'), Botobor::secret());
+		$this->assertEquals(filemtime(SRC_ROOT . '/botobor.php'), Botobor::getSecret());
 
 		$secret = 'My secret';
 		Botobor::setSecret($secret);
-		$this->assertEquals($secret, Botobor::secret());
+		$this->assertEquals($secret, Botobor::getSecret());
 	}
 	//-----------------------------------------------------------------------------
 
