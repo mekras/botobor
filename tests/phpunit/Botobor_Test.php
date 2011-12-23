@@ -20,13 +20,11 @@ class Botobor_Test extends PHPUnit_Framework_TestCase
 
 	/**
 	 * @covers Botobor::signature
-	 * @covers Botobor::verify
 	 */
 	public function test_signing()
 	{
 		$data = 'Form data';
-		$signedData = $data . Botobor::signature($data);
-		$this->assertEquals($data, Botobor::verify($signedData));
+		$signature = Botobor::signature($data);
 	}
 	//-----------------------------------------------------------------------------
 
