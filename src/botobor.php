@@ -88,7 +88,7 @@
  * GNU с этой программой. Если Вы ее не получили, смотрите документ на
  * <http://www.gnu.org/licenses/>
  *
- * @version 0.2.0
+ * @version 0.3.0
  * @copyright 2008-2011, Михаил Красильников, <mihalych@vsepofigu.ru>
  * @license http://www.gnu.org/licenses/gpl.txt  GPL License 3
  * @author Михаил Красильников, <mihalych@vsepofigu.ru>
@@ -178,23 +178,6 @@ class Botobor
 	{
 		$signature = md5($data . self::secret());
 		return $signature;
-	}
-	//-----------------------------------------------------------------------------
-
-	/**
-	 * Подписывает данные
-	 *
-	 * @param string $data  данные
-	 *
-	 * @return string  подписанные данные
-	 *
-	 * @see signature()
-	 * @see setSecret()
-	 */
-	public static function sign($data)
-	{
-		$result = $data . self::signature($data);
-		return $result;
 	}
 	//-----------------------------------------------------------------------------
 
@@ -400,7 +383,7 @@ class Botobor_MetaData
 			$data = gzdeflate($data);
 		}
 		$data = base64_encode($data);
-		$data = Botobor::sign($data);
+		$data .= Botobor::signature($data);
 		return $data;
 	}
 	//-----------------------------------------------------------------------------
