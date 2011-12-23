@@ -157,11 +157,30 @@ class Botobor
 	 * ключа будет использовано время последнего изменения файла библиотеки.
 	 *
 	 * @return string
+	 *
+	 * @see setSecret()
+	 * @see signature()
 	 */
 	public static function secret()
 	{
 		$secret = self::$secret ? self::$secret : filemtime(__FILE__);
 		return $secret;
+	}
+	//-----------------------------------------------------------------------------
+
+	/**
+	 * Устанавливает секретный ключ для подписывания мета-данных
+	 *
+	 * @param string $secret  ключ
+	 *
+	 * @return void
+	 *
+	 * @see secret()
+	 * @see signature()
+	 */
+	public static function setSecret($secret)
+	{
+		self::$secret = $secret;
 	}
 	//-----------------------------------------------------------------------------
 
@@ -212,23 +231,6 @@ class Botobor
 		{
 			self::$defaults[$option] = $value;
 		}
-	}
-	//-----------------------------------------------------------------------------
-
-	/**
-	 * Устанавливает секретный ключ для подписывания мета-данных
-	 *
-	 * @param string $secret  ключ
-	 *
-	 * @return void
-	 *
-	 * @see secret()
-	 * @see signature()
-	 * @see sign()
-	 */
-	public static function setSecret($secret)
-	{
-		self::$secret = $secret;
 	}
 	//-----------------------------------------------------------------------------
 
