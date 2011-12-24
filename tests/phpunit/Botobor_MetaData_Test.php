@@ -35,19 +35,19 @@ class Botobor_MetaData_Test extends PHPUnit_Framework_TestCase
 	//-----------------------------------------------------------------------------
 
 	/**
-	 * @covers Botobor_MetaData::encode
-	 * @covers Botobor_MetaData::decode
+	 * @covers Botobor_MetaData::__construct
+	 * @covers Botobor_MetaData::getEncoded
+	 * @covers Botobor_MetaData::import
 	 * @covers Botobor_MetaData::signature
 	 */
-	public function test_encode()
+	public function test_encoding_decoding()
 	{
 		$meta = new Botobor_MetaData();
 		$meta->param1 = 'value1';
 		$meta->param2 = 'value2';
-		$encoded = $meta->encode();
+		$encoded = $meta->getEncoded();
 
-		$meta = new Botobor_MetaData();
-		$meta->decode($encoded);
+		$meta = new Botobor_MetaData($encoded);
 		$this->assertTrue($meta->isValid());
 		$this->assertEquals('value1', $meta->param1);
 		$this->assertEquals('value2', $meta->param2);

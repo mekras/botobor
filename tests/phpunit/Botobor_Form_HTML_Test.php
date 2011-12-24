@@ -47,9 +47,9 @@ class Botobor_Form_HTML_Test extends PHPUnit_Framework_TestCase
 		$form->expects($this->once())->method('createInput')->
 			with('hidden', 'botobor_meta_data', '[metadata]')->will($this->returnValue('<meta>'));
 
-		$meta = $this->getMock('Botobor_MetaData', array('encode'));
+		$meta = $this->getMock('Botobor_MetaData', array('getEncoded'));
 		$meta->checks = Botobor::getChecks();
-		$meta->expects($this->once())->method('encode')->will($this->returnValue('[metadata]'));
+		$meta->expects($this->once())->method('getEncoded')->will($this->returnValue('[metadata]'));
 
 		$p_meta = new ReflectionProperty('Botobor_Form', 'meta');
 		$p_meta->setAccessible(true);
@@ -74,9 +74,9 @@ class Botobor_Form_HTML_Test extends PHPUnit_Framework_TestCase
 		$form->expects($this->any())->method('createInput')->
 			with('hidden', 'botobor_meta_data', '[metadata]')->will($this->returnValue('<meta>'));
 
-		$meta = $this->getMock('Botobor_MetaData', array('encode'));
+		$meta = $this->getMock('Botobor_MetaData', array('getEncoded'));
 		$meta->checks = Botobor::getChecks();
-		$meta->expects($this->once())->method('encode')->will($this->returnValue('[metadata]'));
+		$meta->expects($this->once())->method('getEncoded')->will($this->returnValue('[metadata]'));
 
 		$p_meta = new ReflectionProperty('Botobor_Form', 'meta');
 		$p_meta->setAccessible(true);

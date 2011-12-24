@@ -291,6 +291,25 @@ class Botobor_MetaData
 	private $isValid = true;
 
 	/**
+	 * Создаёт новый контейнер мета-данных
+	 *
+	 * Аргумент $encodedData, если передан, должен содержать закодированные, подписанные мета-данные
+	 * в виде строки, которые надо импортировать.
+	 *
+	 * @param string $encodedData  закодированные подписанные данные
+	 *
+	 * @since 0.3.0
+	 */
+	public function __construct($encodedData = null)
+	{
+		if ($encodedData)
+		{
+			$this->import($encodedData);
+		}
+	}
+	//-----------------------------------------------------------------------------
+
+	/**
 	 * Возвращает элемент мета-данных
 	 *
 	 * @param string $key
@@ -326,26 +345,13 @@ class Botobor_MetaData
 	//-----------------------------------------------------------------------------
 
 	/**
-	 * Возвращает true если данные достоверны
-	 *
-	 * @return bool
-	 *
-	 * @since 0.1.0
-	 */
-	public function isValid()
-	{
-		return $this->isValid;
-	}
-	//-----------------------------------------------------------------------------
-
-	/**
-	 * Кодирует мета-данные
+	 * Возвращает закодированные и подписанные мета-данные
 	 *
 	 * @return string  закодированные данные
 	 *
-	 * @since 0.1.0
+	 * @since 0.3.0
 	 */
-	public function encode()
+	public function getEncoded()
 	{
 		$data = serialize($this->data);
 		if (function_exists('gzdeflate'))
@@ -359,15 +365,15 @@ class Botobor_MetaData
 	//-----------------------------------------------------------------------------
 
 	/**
-	 * Декодирует мета-данные
+	 * Декодирует и импортирует мета-данные
 	 *
 	 * @param string $encoded  закодированные данные
 	 *
 	 * @return void
 	 *
-	 * @since 0.1.0
+	 * @since 0.3.0
 	 */
-	public function decode($encoded)
+	public function import($encoded)
 	{
 		$signature = substr($encoded, -32);
 		$data = substr($encoded, 0, -32);
@@ -382,11 +388,23 @@ class Botobor_MetaData
 				$data = gzinflate($data);
 			}
 			$data = unserialize($data);
-			if ($data)
-			{
-				$this->data = $data;
-			}
 		}
+
+		$this->data = $data ? $data : array();
+	}
+	//-----------------------------------------------------------------------------
+
+	/**
+	 * Возвращает true если данные достоверны
+	 *
+	 * @return bool
+	 *
+	 * @since 0.1.0
+	 * @see import()
+	 */
+	public function isValid()
+	{
+		return $this->isValid;
 	}
 	//-----------------------------------------------------------------------------
 
@@ -557,7 +575,7 @@ abstract class Botobor_Form
 	/**
 	 * Метод должен возвращать изменённый код формы
 	 *
-	 * Используйте {@link Botobor_MetaData::encode()} для кодирования {@link $meta} в строку.
+	 * Используйте {@link Botobor_MetaData::getEncoded()} для кодирования {@link $meta} в строку.
 	 *
 	 * @return mixed
 	 */
@@ -596,7 +614,7 @@ class Botobor_Form_HTML extends Botobor_Form
 
 		$botoborData =
 			'<div style="display: none;">' .
-			$this->createInput('hidden', Botobor::META_FIELD_NAME, $this->meta->encode()) .
+			$this->createInput('hidden', Botobor::META_FIELD_NAME, $this->meta->getEncoded()) .
 			'</div>';
 
 		$html = preg_replace('/(<form[^>]*>)/si', '$1'.$botoborData, $html);
@@ -763,9 +781,8 @@ class Botobor_Keeper
 			return;
 		}
 
-		/* Получаем мета-данные и проверяем их мета-данных */
-		$meta = new Botobor_MetaData();
-		$meta->decode($req[Botobor::META_FIELD_NAME]);
+		/* Получаем мета-данные и проверяем их */
+		$meta = new Botobor_MetaData($req[Botobor::META_FIELD_NAME]);
 		if (!$meta->isValid())
 		{
 			self::$isHuman = false;
