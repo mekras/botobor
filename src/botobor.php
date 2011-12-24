@@ -745,18 +745,8 @@ class Botobor_Keeper
 		}
 
 		if (
-			!self::testHoneypots($meta, $req)
-		)
-		{
-			self::$isHuman = false;
-			return;
-		}
-
-		/* Проверяем ссылающийся адрес */
-		if (
-			@$meta->checks['referer'] &&
-			$meta->referer &&
-			(!isset($_SERVER['HTTP_REFERER']) || $meta->referer != $_SERVER['HTTP_REFERER'])
+			!self::testHoneypots($meta, $req) ||
+			!self::testReferer($meta)
 		)
 		{
 			self::$isHuman = false;
@@ -830,6 +820,24 @@ class Botobor_Keeper
 			}
 		}
 		return $result;
+	}
+	//-----------------------------------------------------------------------------
+
+	/**
+	 * Проверяем ссылающийся адрес
+	 *
+	 * @param Botobor_MetaData $meta
+	 *
+	 * @return bool
+	 *
+	 * @since 0.3.0
+	 */
+	private static function testReferer(Botobor_MetaData $meta)
+	{
+		return
+			@!$meta->checks['referer'] ||
+			!$meta->referer ||
+			(isset($_SERVER['HTTP_REFERER']) && $meta->referer == $_SERVER['HTTP_REFERER']);
 	}
 	//-----------------------------------------------------------------------------
 }
