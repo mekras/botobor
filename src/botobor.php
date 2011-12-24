@@ -513,18 +513,6 @@ class Botobor_Form
 	 */
 	public function setCheck($check, $state)
 	{
-		if (!is_string($check))
-		{
-			throw new InvalidArgumentException(
-				__METHOD__ . ' expects parameter 1 to be string, ' . gettype($check) . ' given');
-		}
-
-		if (!is_bool($state))
-		{
-			throw new InvalidArgumentException(
-				__METHOD__ . ' expects parameter 2 to be bool, ' . gettype($state) . ' given');
-		}
-
 		if (array_key_exists($check, $this->meta->checks))
 		{
 			$this->meta->checks[$check] = $state;

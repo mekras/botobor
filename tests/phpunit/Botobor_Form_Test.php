@@ -45,30 +45,6 @@ class Botobor_Form_Test extends PHPUnit_Framework_TestCase
 	//-----------------------------------------------------------------------------
 
 	/**
-	 * @covers Botobor_Form::setCheck
-	 * @expectedException InvalidArgumentException
-	 */
-	public function test_setCheck_arg_1()
-	{
-		$form = $this->getMockBuilder('Botobor_Form')->disableOriginalConstructor()->
-			setMethods(array('getCode'))->getMock();
-		$form->setCheck(array(), null);
-	}
-	//-----------------------------------------------------------------------------
-
-	/**
-	 * @covers Botobor_Form::setCheck
-	 * @expectedException InvalidArgumentException
-	 */
-	public function test_setCheck_arg_2()
-	{
-		$form = $this->getMockBuilder('Botobor_Form')->disableOriginalConstructor()->
-			setMethods(array('getCode'))->getMock();
-		$form->setCheck('foo', null);
-	}
-	//-----------------------------------------------------------------------------
-
-	/**
 	 * @covers Botobor_Form::setHoneypot
 	 */
 	public function test_setHoneypot()
