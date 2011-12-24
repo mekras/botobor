@@ -7,12 +7,12 @@
  * Основано на {@link http://nedbatchelder.com/text/stopbots.html}
  *
  * Считается, что форма заполнена роботом, если:
+ * - либо заголовок REFERER не совпадает с адресом, где была размещена форма.
  * - либо между созданием формы и её отправкой прошло слишком мало времени
  *   (см. опцию {@link Botobor_Form::__construct() delay});
  * - либо между созданием формы и её отправкой прошло слишком много времени
  *   (см. опцию {@link Botobor_Form::__construct() lifetime});
  * - либо заполнено хотя бы одно поле-приманка (см. {@link Botobor_Form::setHoneypot()});
- * - либо заголовок REFERER не совпадает с адресом, где была размещена форма.
  *
  * <b>ИСПОЛЬЗОВАНИЕ</b>
  *
@@ -47,10 +47,11 @@
  * Это можно сделать так:
  *
  * <code>
- * $bform = new Botobor_Form($html, array('lifetime' => 60)); // 60 минут
+ * $bform = new Botobor_Form($html);
+ * $bform->setLifetime(60); // 60 минут
  * </code>
  *
- * Подробнее об опциях см. {@link Botobor_Form::__construct()}.
+ * Подробнее об опциях см. {@link Botobor_Form}.
  *
  * <b>Пример с приманкой</b>
  *
@@ -90,9 +91,11 @@
  * <http://www.gnu.org/licenses/>
  *
  * @version 0.3.0
+ *
  * @copyright 2008-2011, Михаил Красильников, <mihalych@vsepofigu.ru>
  * @license http://www.gnu.org/licenses/gpl.txt  GPL License 3
  * @author Михаил Красильников, <mihalych@vsepofigu.ru>
+ *
  * @package Botobor
  */
 
@@ -447,7 +450,7 @@ class Botobor_Form
 	/**
 	 * Защищаемая форма
 	 *
-	 * @var mixed
+	 * @var string
 	 */
 	protected $form;
 
@@ -469,29 +472,21 @@ class Botobor_Form
 	/**
 	 * Конструктор
 	 *
-	 * Аргумент $form должен содержать разметку формы в формате, предусмотренном конкретным потомком
-	 * этого класса.
+	 * Аргумент $form должен содержать разметку формы.
 	 *
-	 * Допустимые опции:
-	 * - delay — наименьшая задержка в секундах допустимая между созаднием и получением формы
-	 * - lifetime — наибольшая задержка в минутах допустимая между созаднием и получением формы
-	 *
-	 * Так же эти значения можно установить через методы {@link setDelay()}, {@link setLifetime()}.
-	 *
-	 * @param mixed $form     разметка формы
-	 * @param array $options  ассоциативный массив опций защиты
+	 * @param string $form  разметка формы
 	 *
 	 * @return Botobor_Form
 	 */
-	public function __construct($form, array $options = array())
+	public function __construct($form)
 	{
 		$this->form = $form;
+
 		$this->meta = new Botobor_MetaData();
 		$this->meta->checks = Botobor::getChecks();
 
-		$this->setDelay(isset($options['delay']) ? $options['delay'] : Botobor::getDefault('delay'));
-		$this->setLifetime(
-			isset($options['lifetime']) ? $options['lifetime'] : Botobor::getDefault('lifetime'));
+		$this->setDelay(Botobor::getDefault('delay'));
+		$this->setLifetime(Botobor::getDefault('lifetime'));
 		$this->honeypots = Botobor::getDefault('honeypots');
 
 		$this->meta->timestamp = time();
@@ -580,6 +575,8 @@ class Botobor_Form
 	 * Возвращает разметку защищённой формы
 	 *
 	 * @return string  HTML
+	 *
+	 * @since 0.3.0
 	 */
 	public function getCode()
 	{
@@ -611,7 +608,7 @@ class Botobor_Form
 	 *
 	 * @return string
 	 *
-	 * @since 0.1.0
+	 * @since 0.3.0
 	 */
 	protected function createInput($type, $name, $value = null, $extra = null)
 	{
@@ -636,6 +633,8 @@ class Botobor_Form
 	 * @param array  $names  Массив имён полей
 	 *
 	 * @return void
+	 *
+	 * @since 0.3.0
 	 */
 	protected function createHoneypots($html, array $names)
 	{

@@ -14,13 +14,10 @@ class Botobor_Form_Test extends PHPUnit_Framework_TestCase
 		$form = $this->getMockBuilder('Botobor_Form')->
 			setMethods(array('setDelay', 'setLifetime', 'getCode'))->
 			disableOriginalConstructor()->getMock();
-		$options = array('delay' => 123, 'lifetime' => 456);
-		$form->expects($this->once())->method('setDelay')->with(123);
-		$form->expects($this->once())->method('setLifetime')->with(456);
 		$_SERVER['REQUEST_URI'] = '/index.php';
 		$_SERVER['HTTP_HOST'] = 'example.org';
 		Botobor::setDefault('honeypots', array('name', 'mail'));
-		$form->__construct('[form]', $options);
+		$form->__construct('[form]');
 
 		$p_meta = new ReflectionProperty('Botobor_Form', 'meta');
 		$p_meta->setAccessible(true);
