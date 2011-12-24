@@ -430,15 +430,18 @@ class Botobor_MetaData
 
 
 /**
- * Абстрактная обёртка для защиты веб-формы
+ * Обёртка для защиты веб-формы
  *
- * Используйте дочерние классы для работы защиты форм.
+ * <code>
+ * $form = new Botobor_Form('<form …');
+ * $html = $form->getCode();
+ * </code>
  *
- * {@link libbotobor.php Описание и примеры.}
+ * {@link botobor.php Описание и примеры.}
  *
  * @package Botobor
  */
-abstract class Botobor_Form
+class Botobor_Form
 {
 	/**
 	 * Защищаемая форма
@@ -572,32 +575,6 @@ abstract class Botobor_Form
 	}
 	//-----------------------------------------------------------------------------
 
-	/**
-	 * Метод должен возвращать изменённый код формы
-	 *
-	 * Используйте {@link Botobor_MetaData::getEncoded()} для кодирования {@link $meta} в строку.
-	 *
-	 * @return mixed
-	 */
-	abstract public function getCode();
-	//-----------------------------------------------------------------------------
-}
-
-/**
- * Обёртка для защиты HTML-формы
- *
- * <code>
- * $bform = new Botobor_Form_HTML('<form …');
- * $html = $bform->getCode();
- * </code>
- *
- * {@link libbotobor.php Описание и примеры.}
- *
- * @package Botobor
- * @since 0.1.0
- */
-class Botobor_Form_HTML extends Botobor_Form
-{
 	/**
 	 * Возвращает разметку защищённой формы
 	 *
