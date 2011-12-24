@@ -45,13 +45,13 @@ class Botobor_Form_Test extends PHPUnit_Framework_TestCase
 	//-----------------------------------------------------------------------------
 
 	/**
-	 * @covers Botobor_Form::setHoneypot
+	 * @covers Botobor_Form::addHoneypot
 	 */
-	public function test_setHoneypot()
+	public function test_addHoneypot()
 	{
 		$form = $this->getMockBuilder('Botobor_Form')->setMethods(array('getCode'))->
 			disableOriginalConstructor()->getMock();
-		$form->setHoneypot('foo');
+		$form->addHoneypot('foo');
 		$p_honeypots = new ReflectionProperty('Botobor_Form', 'honeypots');
 		$p_honeypots->setAccessible(true);
 		$this->assertEquals(array('foo'), $p_honeypots->getValue($form));

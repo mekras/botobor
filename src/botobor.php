@@ -535,13 +535,15 @@ class Botobor_Form
 	//-----------------------------------------------------------------------------
 
 	/**
-	 * Определяет имя поля-приманки
+	 * Добавляет имя поля в список имён полей-приманки
 	 *
-	 * @param string $name  имя поля ввода, которое надо заменить приманкой, или 'auto'
+	 * @param string $name  имя поля ввода, которое надо заменить приманкой
 	 *
 	 * @return void
+	 *
+	 * @since 0.3.0
 	 */
-	public function setHoneypot($name)
+	public function addHoneypot($name)
 	{
 		$this->honeypots []= $name;
 	}
