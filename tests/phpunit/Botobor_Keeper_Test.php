@@ -32,6 +32,7 @@ class Botobor_Keeper_Test extends PHPUnit_Framework_TestCase
 
 	/**
 	 * @covers Botobor_Keeper::handleRequest
+	 * @covers Botobor_Keeper::testHoneypots
 	 */
 	public function test_handleRequest()
 	{

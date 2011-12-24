@@ -744,23 +744,11 @@ class Botobor_Keeper
 			return;
 		}
 
-		/* Проверяем поля-приманки */
-		if ($meta->aliases)
+		if (
+			!self::testHoneypots($meta, $req)
+		)
 		{
-			foreach ($meta->aliases as $alias => $name)
-			{
-				if (isset($req[$name]) && $req[$name])
-				{
-					self::$isHuman = false;
-					// Не прерываем вполнение метода, чтобы восстановть правильные имена для всех параметров
-				}
-
-				$req[$name] = @$req[$alias];
-				unset($req[$alias]);
-			}
-		}
-		if (!self::$isHuman)
-		{
+			self::$isHuman = false;
 			return;
 		}
 
@@ -811,6 +799,37 @@ class Botobor_Keeper
 			self::handleRequest();
 		}
 		return self::$isHuman;
+	}
+	//-----------------------------------------------------------------------------
+
+	/**
+	 * Проверяет поля-приманки
+	 *
+	 * @param Botobor_MetaData $meta
+	 * @param array            $req
+	 *
+	 * @return bool
+	 *
+	 * @since 0.3.0
+	 */
+	private static function testHoneypots(Botobor_MetaData $meta, array &$req)
+	{
+		$result = true;
+		if ($meta->aliases)
+		{
+			foreach ($meta->aliases as $alias => $name)
+			{
+				if (isset($req[$name]) && $req[$name])
+				{
+					$result = false;
+					// Не прерываем вполнение метода, чтобы восстановть правильные имена для всех параметров
+				}
+
+				$req[$name] = @$req[$alias];
+				unset($req[$alias]);
+			}
+		}
+		return $result;
 	}
 	//-----------------------------------------------------------------------------
 }
