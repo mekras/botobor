@@ -185,22 +185,6 @@ class Botobor
 	//-----------------------------------------------------------------------------
 
 	/**
-	 * Возвращает подпись для указанных данных
-	 *
-	 * @param string $data  подписываемые данные
-	 *
-	 * @return string  подпись
-	 *
-	 * @see setSecret()
-	 */
-	public static function signature($data)
-	{
-		$signature = md5($data . self::getSecret());
-		return $signature;
-	}
-	//-----------------------------------------------------------------------------
-
-	/**
 	 * Возвращает значение по умолчанию для опции защиты
 	 *
 	 * @param string $option  имя опции
@@ -369,7 +353,7 @@ class Botobor_MetaData
 			$data = gzdeflate($data);
 		}
 		$data = base64_encode($data);
-		$data .= Botobor::signature($data);
+		$data .= $this->signature($data);
 		return $data;
 	}
 	//-----------------------------------------------------------------------------
@@ -387,7 +371,7 @@ class Botobor_MetaData
 	{
 		$signature = substr($encoded, -32);
 		$data = substr($encoded, 0, -32);
-		$validSignature = Botobor::signature($data);
+		$validSignature = $this->signature($data);
 		$this->isValid = $signature == $validSignature;
 
 		if ($data)
@@ -405,6 +389,24 @@ class Botobor_MetaData
 		}
 	}
 	//-----------------------------------------------------------------------------
+
+	/**
+	 * Возвращает подпись для указанных данных
+	 *
+	 * @param string $data  подписываемые данные
+	 *
+	 * @return string  подпись
+	 *
+	 * @since 0.3.0
+	 * @uses Botobor::getSecret()
+	 */
+	protected function signature($data)
+	{
+		$signature = md5($data . Botobor::getSecret());
+		return $signature;
+	}
+	//-----------------------------------------------------------------------------
+
 }
 
 

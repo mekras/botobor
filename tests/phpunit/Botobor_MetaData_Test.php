@@ -37,6 +37,7 @@ class Botobor_MetaData_Test extends PHPUnit_Framework_TestCase
 	/**
 	 * @covers Botobor_MetaData::encode
 	 * @covers Botobor_MetaData::decode
+	 * @covers Botobor_MetaData::signature
 	 */
 	public function test_encode()
 	{
