@@ -14,6 +14,8 @@
  *   (см. опцию {@link Botobor_Form::__construct() lifetime});
  * - либо заполнено хотя бы одно поле-приманка (см. {@link Botobor_Form::setHoneypot()});
  *
+ * Любая из проверк может быть отключена.
+ *
  * <b>ИСПОЛЬЗОВАНИЕ</b>
  *
  * <b>Простой пример</b>
@@ -32,7 +34,7 @@
  *
  * Файл, обрабатывающий форму:
  * <code>
- * require 'libbotobor.php';
+ * require 'botobor.php';
  * …
  * if (Botobor_Keeper::isHuman())
  * {
@@ -660,7 +662,7 @@ class Botobor_Form
  * полей-приманок на исходные поля формы.
  *
  * @package Botobor
- * @link libbotobor.php Описание и примеры
+ * @link botobor.php Описание и примеры
  * @see isHuman()
  */
 class Botobor_Keeper
