@@ -746,27 +746,8 @@ class Botobor_Keeper
 
 		if (
 			!self::testHoneypots($meta, $req) ||
-			!self::testReferer($meta)
-		)
-		{
-			self::$isHuman = false;
-			return;
-		}
-
-		/* Проверяем задержку */
-		if (
-			$meta->checks['delay'] &&
-			(time() - $meta->timestamp < $meta->delay)
-		)
-		{
-			self::$isHuman = false;
-			return;
-		}
-
-		/* Проверяем время жизни */
-		if (
-			$meta->checks['lifetime'] &&
-			(time() - $meta->timestamp > $meta->lifetime * 60)
+			!self::testReferer($meta) ||
+			!self::testTimings($meta)
 		)
 		{
 			self::$isHuman = false;
@@ -838,6 +819,39 @@ class Botobor_Keeper
 			@!$meta->checks['referer'] ||
 			!$meta->referer ||
 			(isset($_SERVER['HTTP_REFERER']) && $meta->referer == $_SERVER['HTTP_REFERER']);
+	}
+	//-----------------------------------------------------------------------------
+
+	/**
+	 * Проверяет задержку и время жизни
+	 *
+	 * @param Botobor_MetaData $meta
+	 *
+	 * @return bool
+	 *
+	 * @since 0.3.0
+	 */
+	private static function testTimings(Botobor_MetaData $meta)
+	{
+		/* Проверяем задержку */
+		if (
+			$meta->checks['delay'] &&
+			(time() - $meta->timestamp < $meta->delay)
+		)
+		{
+			return false;
+		}
+
+		/* Проверяем время жизни */
+		if (
+			$meta->checks['lifetime'] &&
+			(time() - $meta->timestamp > $meta->lifetime * 60)
+		)
+		{
+			return false;
+		}
+
+		return true;
 	}
 	//-----------------------------------------------------------------------------
 }
