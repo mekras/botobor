@@ -47,25 +47,5 @@ class Botobor_Test extends PHPUnit_Framework_TestCase
 	}
 	//-----------------------------------------------------------------------------
 
-	/**
-	 * @covers Botobor::setCheck
-	 * @expectedException InvalidArgumentException
-	 */
-	public function test_setCheck_arg_1()
-	{
-		Botobor::setCheck(array(), null);
-	}
-	//-----------------------------------------------------------------------------
-
-	/**
-	 * @covers Botobor::setCheck
-	 * @expectedException InvalidArgumentException
-	 */
-	public function test_setCheck_arg_2()
-	{
-		Botobor::setCheck('foo', null);
-	}
-	//-----------------------------------------------------------------------------
-
 	/* */
 }
