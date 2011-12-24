@@ -25,7 +25,7 @@
  * // Получите разметку формы тем способом, который предусмотрен у вас в проекте, например:
  * $html = $form->getHTML();
  * // Создайте объект-обёртку:
- * $bform = new Botobor_Form_HTML($html);
+ * $bform = new Botobor_Form($html);
  * // Получите новую разметку формы
  * $html = $bform->getCode();
  * </code>
@@ -47,7 +47,7 @@
  * Это можно сделать так:
  *
  * <code>
- * $bform = new Botobor_Form_HTML($html, array('lifetime' => 60)); // 60 минут
+ * $bform = new Botobor_Form($html, array('lifetime' => 60)); // 60 минут
  * </code>
  *
  * Подробнее об опциях см. {@link Botobor_Form::__construct()}.
@@ -61,10 +61,11 @@
  *
  * В этом примере поле «name» будет сделано приманкой. При этом имя настоящего поля «name» будет
  * заменено на случайное значение. Обратное преобразование будет сделано во время вызова
- * любого проверяющего метода {@link Botobor_Keeper}, например{@link Botobor_Keeper::isHuman()}.
+ * метода {@link Botobor_Keeper::handleRequest()} (вызывается автоматически из
+ * {@link Botobor_Keeper::isHuman()}).
  *
  * <code>
- * $bform = new Botobor_Form_HTML($html);
+ * $bform = new Botobor_Form($html);
  * $bform->setHoneypot('name');
  * </code>
  *
