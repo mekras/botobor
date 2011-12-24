@@ -736,25 +736,14 @@ class Botobor_Keeper
 			return;
 		}
 
-		/* Получаем мета-данные и проверяем их */
+		// Получаем мета-данные
 		$meta = new Botobor_MetaData($req[Botobor::META_FIELD_NAME]);
-		if (!$meta->isValid())
-		{
-			self::$isHuman = false;
-			return;
-		}
 
-		if (
-			!self::testHoneypots($meta, $req) ||
-			!self::testReferer($meta) ||
-			!self::testTimings($meta)
-		)
-		{
-			self::$isHuman = false;
-			return;
-		}
-
-		self::$isHuman = true;
+		self::$isHuman =
+			$meta->isValid() &&
+			self::testHoneypots($meta, $req) && // эта проверка обязательно должна быть первой. см. ниже
+			self::testReferer($meta) &&
+			self::testTimings($meta);
 	}
 	//-----------------------------------------------------------------------------
 
