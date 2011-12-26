@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<!-- template designed by Marco Von Ballmoos -->
+		<meta http-equiv='Content-Type' content='text/html; charset=utf-8'/>
+		<title>Docs for page botobor.php</title>
+		<link rel="stylesheet" href="../media/stylesheet.css" />
+	</head>
+	<body>
+		<div class="page-body">
+<h2 class="file-name"><img src="../media/images/Page_logo.png" alt="File" style="vertical-align: middle">/botobor.php</h2>
+
+<a name="sec-description"></a>
+<div class="info-box">
+	<div class="info-box-title">Description</div>
+	<div class="nav-bar">
+					<span class="disabled">Description</span> |
+							<a href="#sec-classes">Classes</a>
+														</div>
+	<div class="info-box-body">	
+		<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Ботобор</p>
+<p class="description"><p>Библиотека для защиты веб-форм от спама</p><p>Основано на <a href="http://nedbatchelder.com/text/stopbots.html">http://nedbatchelder.com/text/stopbots.html</a></p><p>Считается, что форма заполнена роботом, если: <ul><li>либо заголовок REFERER не совпадает с адресом, где была размещена форма.</li><li>либо между созданием формы и её отправкой прошло слишком мало времени
+   (см. опцию <a href="../Botobor/Botobor_Form.html#method__construct">delay</a>);</li><li>либо между созданием формы и её отправкой прошло слишком много времени
+   (см. опцию <a href="../Botobor/Botobor_Form.html#method__construct">lifetime</a>);</li><li>либо заполнено хотя бы одно поле-приманка (см. Botobor_Form::setHoneypot());</li></ul>  Любая из проверк может быть отключена.</p><p><strong>ИСПОЛЬЗОВАНИЕ</strong></p><p><strong>Простой пример</strong></p><p>Файл, создающий форму:  <div class="src-code"><ol><li><div class="src-line">&nbsp;require&nbsp;<span class="src-str">'botobor.php'</span><span class="src-sym">;</span></div></li>
+<li><div class="src-line">&nbsp;<span class="src-id">…</span></div></li>
+<li><div class="src-line">&nbsp;<span class="src-comm">//&nbsp;Получите&nbsp;разметку&nbsp;формы&nbsp;тем&nbsp;способом,&nbsp;который&nbsp;предусмотрен&nbsp;у&nbsp;вас&nbsp;в&nbsp;проекте,&nbsp;например:</span></div></li>
+<li><div class="src-line">&nbsp;<span class="src-var">$html&nbsp;</span>=&nbsp;<span class="src-var">$form</span><span class="src-sym">-&gt;</span><span class="src-id">getHTML</span><span class="src-sym">(</span><span class="src-sym">)</span><span class="src-sym">;</span></div></li>
+<li><div class="src-line">&nbsp;<span class="src-comm">//&nbsp;Создайте&nbsp;объект-обёртку:</span></div></li>
+<li><div class="src-line">&nbsp;<span class="src-var">$bform&nbsp;</span>=&nbsp;<span class="src-key">new&nbsp;</span><span class="src-id"><a href="../Botobor/Botobor_Form.html">Botobor_Form</a></span><span class="src-sym">(</span><span class="src-var">$html</span><span class="src-sym">)</span><span class="src-sym">;</span></div></li>
+<li><div class="src-line">&nbsp;<span class="src-comm">//&nbsp;Получите&nbsp;новую&nbsp;разметку&nbsp;формы</span></div></li>
+<li><div class="src-line">&nbsp;<span class="src-var">$html&nbsp;</span>=&nbsp;<span class="src-var">$bform</span><span class="src-sym">-&gt;</span><span class="src-id">getCode</span><span class="src-sym">(</span><span class="src-sym">)</span><span class="src-sym">;</span></div></li>
+</ol></div></p><p>Файл, обрабатывающий форму:  <div class="src-code"><ol><li><div class="src-line">&nbsp;require&nbsp;<span class="src-str">'botobor.php'</span><span class="src-sym">;</span></div></li>
+<li><div class="src-line">&nbsp;<span class="src-id">…</span></div></li>
+<li><div class="src-line">&nbsp;<span class="src-key">if&nbsp;</span><span class="src-sym">(</span><span class="src-id"><a href="../Botobor/Botobor_Keeper.html">Botobor_Keeper</a></span><span class="src-sym">::</span><a href="../Botobor/Botobor_Keeper.html#methodisHuman">isHuman</a><span class="src-sym">(</span><span class="src-sym">))</span></div></li>
+<li><div class="src-line">&nbsp;<span class="src-sym">{</span></div></li>
+<li><div class="src-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-comm">//&nbsp;Форма&nbsp;отправлена&nbsp;человеком,&nbsp;можно&nbsp;обрабатывать&nbsp;её.</span></div></li>
+<li><div class="src-line">&nbsp;<span class="src-sym">}</span></div></li>
+</ol></div></p><p><strong>Пример с опциями</strong></p><p>Можно менять поведение Botobor при помощи опций. Например, для форм комментариев имеет смысл  увеличить параметр lifetime, т. к. посетители перед комментированием могут долго читать статью.  Это можно сделать так:</p><p><div class="src-code"><ol><li><div class="src-line">&nbsp;<span class="src-var">$bform&nbsp;</span>=&nbsp;<span class="src-key">new&nbsp;</span><span class="src-id"><a href="../Botobor/Botobor_Form.html">Botobor_Form</a></span><span class="src-sym">(</span><span class="src-var">$html</span><span class="src-sym">)</span><span class="src-sym">;</span></div></li>
+<li><div class="src-line">&nbsp;<span class="src-var">$bform</span><span class="src-sym">-&gt;</span><span class="src-id">setLifetime</span><span class="src-sym">(</span><span class="src-num">60</span><span class="src-sym">)</span><span class="src-sym">;&nbsp;</span><span class="src-comm">//&nbsp;60&nbsp;минут</span></div></li>
+</ol></div></p><p>Подробнее об опциях см. <a href="../Botobor/Botobor_Form.html">Botobor_Form</a>.</p><p><strong>Пример с приманкой</strong></p><p>Поля-примнаки предназначены для отлова роботов-пауков, которые находят формы самостоятельно.  Такие роботы, как правило, ищут в форме знакомые поля (например, name) и заполняют их. Ботобор  может добавить в форму скрытые от человека (при помощи CSS) поля с такими именами. Человек  оставит эти поля пустыми (т. к. просто не увидит), а робот заполнит и тем самым выдаст себя.</p><p>В этом примере поле «name» будет сделано приманкой. При этом имя настоящего поля «name» будет  заменено на случайное значение. Обратное преобразование будет сделано во время вызова  метода <a href="../Botobor/Botobor_Keeper.html#methodhandleRequest">Botobor_Keeper::handleRequest()</a> (вызывается автоматически из  <a href="../Botobor/Botobor_Keeper.html#methodisHuman">Botobor_Keeper::isHuman()</a>).</p><p><div class="src-code"><ol><li><div class="src-line">&nbsp;<span class="src-var">$bform&nbsp;</span>=&nbsp;<span class="src-key">new&nbsp;</span><span class="src-id"><a href="../Botobor/Botobor_Form.html">Botobor_Form</a></span><span class="src-sym">(</span><span class="src-var">$html</span><span class="src-sym">)</span><span class="src-sym">;</span></div></li>
+<li><div class="src-line">&nbsp;<span class="src-var">$bform</span><span class="src-sym">-&gt;</span><span class="src-id">setHoneypot</span><span class="src-sym">(</span><span class="src-str">'name'</span><span class="src-sym">)</span><span class="src-sym">;</span></div></li>
+</ol></div></p><p>Подробнее см. <a href="../Botobor/Botobor_Keeper.html#methodhandleRequest">Botobor_Keeper::handleRequest()</a>.</p><p><strong>ЛИЦЕНЗИЯ</strong></p><p>Данная программа является свободным программным обеспечением. Вы  вправе распространять ее и/или модифицировать в соответствии с  условиями версии 3 либо (по вашему выбору) с условиями более поздней  версии Стандартной Общественной Лицензии GNU, опубликованной Free  Software Foundation.</p><p>Мы распространяем эту программу в надежде на то, что она будет вам  полезной, однако НЕ ПРЕДОСТАВЛЯЕМ НА НЕЕ НИКАКИХ ГАРАНТИЙ, в том  числе ГАРАНТИИ ТОВАРНОГО СОСТОЯНИЯ ПРИ ПРОДАЖЕ и ПРИГОДНОСТИ ДЛЯ  ИСПОЛЬЗОВАНИЯ В КОНКРЕТНЫХ ЦЕЛЯХ. Для получения более подробной  информации ознакомьтесь со Стандартной Общественной Лицензией GNU.</p><p>Вы должны были получить копию Стандартной Общественной Лицензии  GNU с этой программой. Если Вы ее не получили, смотрите документ на  &lt;http://www.gnu.org/licenses/&gt;</p></p>
+	<ul class="tags">
+				<li><span class="field">author:</span> Михаил Красильников, &lt;<a href="mailto:mihalych@vsepofigu.ru">mihalych@vsepofigu.ru</a>&gt;</li>
+				<li><span class="field">version:</span> 0.3.0</li>
+				<li><span class="field">copyright:</span> 2008-2011, Михаил Красильников, &lt;mihalych@vsepofigu.ru&gt;</li>
+				<li><span class="field">license:</span> <a href="http://www.gnu.org/licenses/gpl.txt">GPL License 3</a></li>
+			</ul>
+		
+			</div>
+</div>
+		
+	<a name="sec-classes"></a>	
+	<div class="info-box">
+		<div class="info-box-title">Classes</div>
+		<div class="nav-bar">
+			<a href="#sec-description">Description</a> |
+			<span class="disabled">Classes</span>
+																	</div>
+		<div class="info-box-body">	
+			<table cellpadding="2" cellspacing="0" class="class-table">
+				<tr>
+					<th class="class-table-header">Class</th>
+					<th class="class-table-header">Description</th>
+				</tr>
+								<tr>
+					<td style="padding-right: 2em; vertical-align: top; white-space: nowrap">
+						<img src="../media/images/Class.png"
+								 alt=" class"
+								 title=" class"/>
+						<a href="../Botobor/Botobor.html">Botobor</a>
+					</td>
+					<td>
+											Вспомогательный класс
+										</td>
+				</tr>
+								<tr>
+					<td style="padding-right: 2em; vertical-align: top; white-space: nowrap">
+						<img src="../media/images/Class.png"
+								 alt=" class"
+								 title=" class"/>
+						<a href="../Botobor/Botobor_MetaData.html">Botobor_MetaData</a>
+					</td>
+					<td>
+											Мета-данные формы
+										</td>
+				</tr>
+								<tr>
+					<td style="padding-right: 2em; vertical-align: top; white-space: nowrap">
+						<img src="../media/images/Class.png"
+								 alt=" class"
+								 title=" class"/>
+						<a href="../Botobor/Botobor_Form.html">Botobor_Form</a>
+					</td>
+					<td>
+											Обёртка для защиты веб-формы
+										</td>
+				</tr>
+								<tr>
+					<td style="padding-right: 2em; vertical-align: top; white-space: nowrap">
+						<img src="../media/images/Class.png"
+								 alt=" class"
+								 title=" class"/>
+						<a href="../Botobor/Botobor_Keeper.html">Botobor_Keeper</a>
+					</td>
+					<td>
+											Класс проверки принятой формы
+										</td>
+				</tr>
+							</table>
+		</div>
+	</div>
+
+	
+	
+	
+	
+	<p class="notes" id="credit">
+		Документация создана Mon, 26 Dec 2011 22:39:10 +0400 при помощи <a href="http://www.phpdoc.org" target="_blank">phpDocumentor 1.4.3</a>
+	</p>
+	</div></body>
+</html>

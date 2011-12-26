@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<!-- template designed by Marco Von Ballmoos -->
+		<meta http-equiv='Content-Type' content='text/html; charset=utf-8'/>
+		<title>Docs For Class Botobor_Keeper</title>
+		<link rel="stylesheet" href="../media/stylesheet.css" />
+	</head>
+	<body>
+		<div class="page-body">
+<h2 class="class-name"><img src="../media/images/Class_logo.png"
+														alt=" Class"
+														title=" Class"
+														style="vertical-align: middle"> Botobor_Keeper</h2>
+
+<a name="sec-description"></a>
+<div class="info-box">
+	<div class="info-box-title">Описание</div>
+	<div class="nav-bar">
+					<span class="disabled">Описание</span> |
+															<a href="#sec-method-summary">Методы</a> (<a href="#sec-methods">подробности</a>)
+								</div>
+	<div class="info-box-body">
+        		<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Класс проверки принятой формы</p>
+<p class="description"><p>Проверяет форму, принятую в обрабатываемом запросе. При этом проводится обратная замена  полей-приманок на исходные поля формы.</p></p>
+	<ul class="tags">
+				<li><span class="field">see:</span> <a href="../Botobor/Botobor_Keeper.html#methodisHuman">Botobor_Keeper::isHuman()</a></li>
+				<li><span class="field">link:</span> <a href="../Botobor/_botobor.php.html">botobor.php</a></li>
+			</ul>
+		<p class="notes">
+			Исходный файл <a class="field" href="_botobor.php.html">/botobor.php</a> (строка <span class="field">668</span>)
+		</p>
+
+		
+		<pre></pre>
+
+			</div>
+</div>
+
+
+
+
+	<a name="sec-method-summary"></a>
+	<div class="info-box">
+		<div class="info-box-title">Обзор методов</span></div>
+		<div class="nav-bar">
+			<a href="#sec-description">Описание</a> |
+												<span class="disabled">Методы</span> (<a href="#sec-methods">подробности</a>)
+		</div>
+		<div class="info-box-body">
+			<div class="method-summary">
+												<div class="method-definition">
+					<img src="../media/images/StaticMethod.png" alt=" "/>
+											static <span class="method-result">void</span>
+										<a href="#handleRequest" title="details" class="method-name">handleRequest</a>
+											([<span class="var-type"></span>&nbsp;<span class="var-name">&$req</span> = <span class="var-default">null</span>])
+									</div>
+																<div class="method-definition">
+					<img src="../media/images/StaticMethod.png" alt=" "/>
+											static <span class="method-result">bool</span>
+										<a href="#isHuman" title="details" class="method-name">isHuman</a>
+										()
+									</div>
+																															</div>
+		</div>
+	</div>
+
+
+	<a name="sec-methods"></a>
+	<div class="info-box">
+		<div class="info-box-title">Методы</div>
+		<div class="nav-bar">
+			<a href="#sec-description">Описание</a> |
+													<a href="#sec-method-summary">Методы</a> (<span class="disabled">подробности</span>)
+					</div>
+		<div class="info-box-body">
+			<a name="method_detail"></a>
+<a name="methodhandleRequest" id="handleRequest"><!-- --></a>
+<div class="b-member-info">
+	
+	<div class="method-header">
+		<img src="../media/images/StaticMethod.png" />
+		<span class="method-title">static Botobor_Keeper::handleRequest</span> (line <span class="line-number">708</span>)
+	</div> 
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			handleRequest
+		</span>
+					([<span class="var-type"></span>&nbsp;<span class="var-name">&$req</span> = <span class="var-default">null</span>])
+			</div>
+	
+		<p class="short-description">Обрабатывает текущий запрос</p>
+			<p class="description"><p>Если в текущем запросе содержатся мета-данные Ботобора, они извлекаются и проверяются.  Проводится обратная замена полей-приманок на исходные поля формы.</p><p>Этот метод вызывается автоматически из <a href="../Botobor/Botobor_Keeper.html#methodisHuman">isHuman()</a>. Но разработчики могут вызывать его  самостоятельно, если их приложение получает аргументы запроса не напрямую из $_GET или $_POST,  а через посредничество другого класса, который извлекает аргументы до обращения к  <a href="../Botobor/Botobor_Keeper.html#methodisHuman">isHuman()</a>. В этом случае надо вызвать <a href="../Botobor/Botobor_Keeper.html#methodhandleRequest">handleRequest()</a> до создания  класса-посредника.</p><p>Другой способ, если значения извлечённые из $_GET/$_POST хранятся классом-посредником в  массиве — передать этот массив в качестве аргумента $req при вызове метода. В этом случае  будет обработан этот массив, а не $_GET/$_POST.</p></p>
+	
+			<h4>Аргументы:</h4>
+		<ul class="parameters">
+					<li>
+				<span class="var-type">array</span>
+				<span class="var-name">&$req</span><span class="var-description">: аргументы запроса</span>			</li>
+				</ul>
+		
+			<h4>Прочее:</h4>
+		<ul class="tags">
+						<li><span class="field">since:</span> 0.1.0</li>
+						<li><span class="field">access:</span> public</li>
+					</ul>
+	
+			
+	</div>
+<a name="methodisHuman" id="isHuman"><!-- --></a>
+<div class="b-member-info">
+	
+	<div class="method-header">
+		<img src="../media/images/StaticMethod.png" />
+		<span class="method-title">static Botobor_Keeper::isHuman</span> (line <span class="line-number">757</span>)
+	</div> 
+	
+	<div class="method-signature">
+		<span class="method-result">bool</span>
+		<span class="method-name">
+			isHuman
+		</span>
+				()
+			</div>
+	
+		<p class="short-description">Возвращает true если форму отправил человек</p>
+		
+		
+			<h4>Прочее:</h4>
+		<ul class="tags">
+						<li><span class="field">access:</span> public</li>
+					</ul>
+	
+			
+	</div>
+					</div>
+	</div>
+
+
+	<p class="notes" id="credit">
+		Документация создана Mon, 26 Dec 2011 22:39:11 +0400 при помощи <a href="http://www.phpdoc.org" target="_blank">phpDocumentor 1.4.3</a>
+	</p>
+	</div></body>
+</html>
