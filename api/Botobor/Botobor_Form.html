@@ -25,11 +25,29 @@
 	<div class="info-box-body">
         		<!-- ========== Info from phpDoc block ========= -->
 <p class="short-description">Обёртка для защиты веб-формы</p>
-<p class="description"><p><div class="src-code"><ol><li><div class="src-line">&nbsp;<span class="src-var">$form&nbsp;</span>=&nbsp;<span class="src-key">new&nbsp;</span><span class="src-id"><a href="../Botobor/Botobor_Form.html">Botobor_Form</a></span><span class="src-sym">(</span><span class="src-str">'&lt;form&nbsp;…'</span><span class="src-sym">)</span><span class="src-sym">;</span></div></li>
-<li><div class="src-line">&nbsp;<span class="src-var">$html&nbsp;</span>=&nbsp;<span class="src-var">$form</span><span class="src-sym">-&gt;</span><a href="../Botobor/Botobor_Form.html#methodgetCode">getCode</a><span class="src-sym">(</span><span class="src-sym">)</span><span class="src-sym">;</span></div></li>
-</ol></div></p><p><a href="../Botobor/_botobor.php.html">Описание и примеры.</a></p></p>
+<p class="description"><p>Основано на <a href="http://nedbatchelder.com/text/stopbots.html">http://nedbatchelder.com/text/stopbots.html</a></p><p>Считается, что форма заполнена роботом, если: <ul><li>либо заголовок REFERER не совпадает с адресом, где была размещена форма;</li><li>либо между созданием формы и её отправкой прошло слишком мало времени
+   (см. опцию <a href="../Botobor/Botobor_Form.html#method__construct">delay</a>);</li><li>либо между созданием формы и её отправкой прошло слишком много времени
+   (см. опцию <a href="../Botobor/Botobor_Form.html#method__construct">lifetime</a>);</li><li>либо заполнено хотя бы одно поле-приманка (см. Botobor_Form::setHoneypot()).</li></ul>  Любая из проверк может быть отключена.</p><p><strong>ИСПОЛЬЗОВАНИЕ</strong></p><p><strong>Простой пример</strong></p><p>Файл, создающий форму:  <div class="src-code"><ol><li><div class="src-line">&nbsp;require&nbsp;<span class="src-str">'botobor.php'</span><span class="src-sym">;</span></div></li>
+<li><div class="src-line">&nbsp;<span class="src-id">…</span></div></li>
+<li><div class="src-line">&nbsp;<span class="src-comm">//&nbsp;Получите&nbsp;разметку&nbsp;формы&nbsp;тем&nbsp;способом,&nbsp;который&nbsp;предусмотрен&nbsp;у&nbsp;вас&nbsp;в&nbsp;проекте,&nbsp;например:</span></div></li>
+<li><div class="src-line">&nbsp;<span class="src-var">$html&nbsp;</span>=&nbsp;<span class="src-var">$form</span><span class="src-sym">-&gt;</span><span class="src-id">getHTML</span><span class="src-sym">(</span><span class="src-sym">)</span><span class="src-sym">;</span></div></li>
+<li><div class="src-line">&nbsp;<span class="src-comm">//&nbsp;Создайте&nbsp;объект-обёртку:</span></div></li>
+<li><div class="src-line">&nbsp;<span class="src-var">$bform&nbsp;</span>=&nbsp;<span class="src-key">new&nbsp;</span><span class="src-id"><a href="../Botobor/Botobor_Form.html">Botobor_Form</a></span><span class="src-sym">(</span><span class="src-var">$html</span><span class="src-sym">)</span><span class="src-sym">;</span></div></li>
+<li><div class="src-line">&nbsp;<span class="src-comm">//&nbsp;Получите&nbsp;новую&nbsp;разметку&nbsp;формы</span></div></li>
+<li><div class="src-line">&nbsp;<span class="src-var">$html&nbsp;</span>=&nbsp;<span class="src-var">$bform</span><span class="src-sym">-&gt;</span><a href="../Botobor/Botobor_Form.html#methodgetCode">getCode</a><span class="src-sym">(</span><span class="src-sym">)</span><span class="src-sym">;</span></div></li>
+</ol></div></p><p>Файл, обрабатывающий форму:  <div class="src-code"><ol><li><div class="src-line">&nbsp;require&nbsp;<span class="src-str">'botobor.php'</span><span class="src-sym">;</span></div></li>
+<li><div class="src-line">&nbsp;<span class="src-id">…</span></div></li>
+<li><div class="src-line">&nbsp;<span class="src-key">if&nbsp;</span><span class="src-sym">(</span><span class="src-id"><a href="../Botobor/Botobor_Keeper.html">Botobor_Keeper</a></span><span class="src-sym">::</span><a href="../Botobor/Botobor_Keeper.html#methodisHuman">isHuman</a><span class="src-sym">(</span><span class="src-sym">))</span></div></li>
+<li><div class="src-line">&nbsp;<span class="src-sym">{</span></div></li>
+<li><div class="src-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-comm">//&nbsp;Форма&nbsp;отправлена&nbsp;человеком,&nbsp;можно&nbsp;обрабатывать&nbsp;её.</span></div></li>
+<li><div class="src-line">&nbsp;<span class="src-sym">}</span></div></li>
+</ol></div></p><p><strong>Пример с опциями</strong></p><p>Можно менять поведение Botobor при помощи опций. Например, для форм комментариев имеет смысл  увеличить параметр lifetime, т. к. посетители перед комментированием могут долго читать статью.  Это можно сделать так:</p><p><div class="src-code"><ol><li><div class="src-line">&nbsp;<span class="src-var">$bform&nbsp;</span>=&nbsp;<span class="src-key">new&nbsp;</span><span class="src-id"><a href="../Botobor/Botobor_Form.html">Botobor_Form</a></span><span class="src-sym">(</span><span class="src-var">$html</span><span class="src-sym">)</span><span class="src-sym">;</span></div></li>
+<li><div class="src-line">&nbsp;<span class="src-var">$bform</span><span class="src-sym">-&gt;</span><a href="../Botobor/Botobor_Form.html#methodsetLifetime">setLifetime</a><span class="src-sym">(</span><span class="src-num">60</span><span class="src-sym">)</span><span class="src-sym">;&nbsp;</span><span class="src-comm">//&nbsp;60&nbsp;минут</span></div></li>
+</ol></div></p><p>Подробнее об опциях см. <a href="../Botobor/Botobor_Form.html#methodsetCheck">setCheck()</a>, <a href="../Botobor/Botobor_Form.html#methodsetDelay">setDelay()</a>, <a href="../Botobor/Botobor_Form.html#methodsetLifetime">setLifetime()</a>.</p><p><strong>Пример с приманкой</strong></p><p>Поля-примнаки предназначены для отлова роботов-пауков, которые находят формы самостоятельно.  Такие роботы, как правило, ищут в форме знакомые поля (например, name) и заполняют их. Ботобор  может добавить в форму скрытые от человека (при помощи CSS) поля с такими именами. Человек  оставит эти поля пустыми (т. к. просто не увидит), а робот заполнит и тем самым выдаст себя.</p><p>В этом примере поле «name» будет сделано приманкой. При этом имя настоящего поля «name» будет  заменено на случайное значение. Обратное преобразование будет сделано во время вызова  метода <a href="../Botobor/Botobor_Keeper.html#methodhandleRequest">Botobor_Keeper::handleRequest()</a> (вызывается автоматически из  <a href="../Botobor/Botobor_Keeper.html#methodisHuman">Botobor_Keeper::isHuman()</a>).</p><p><div class="src-code"><ol><li><div class="src-line">&nbsp;<span class="src-var">$bform&nbsp;</span>=&nbsp;<span class="src-key">new&nbsp;</span><span class="src-id"><a href="../Botobor/Botobor_Form.html">Botobor_Form</a></span><span class="src-sym">(</span><span class="src-var">$html</span><span class="src-sym">)</span><span class="src-sym">;</span></div></li>
+<li><div class="src-line">&nbsp;<span class="src-var">$bform</span><span class="src-sym">-&gt;</span><span class="src-id">setHoneypot</span><span class="src-sym">(</span><span class="src-str">'name'</span><span class="src-sym">)</span><span class="src-sym">;</span></div></li>
+</ol></div></p><p>Подробнее см. <a href="../Botobor/Botobor_Keeper.html#methodhandleRequest">Botobor_Keeper::handleRequest()</a>.</p></p>
 		<p class="notes">
-			Исходный файл <a class="field" href="_botobor.php.html">/botobor.php</a> (строка <span class="field">438</span>)
+			Исходный файл <a class="field" href="_botobor.php.html">/botobor.php</a> (строка <span class="field">433</span>)
 		</p>
 
 		
@@ -153,7 +171,7 @@
 		<span class="var-title">
 			<span class="var-type">string</span>
 			<span class="var-name">$form</span>
-						(line <span class="line-number">445</span>)
+						(line <span class="line-number">440</span>)
 		</span>
 	</div>
 
@@ -176,7 +194,7 @@
 		<span class="var-title">
 			<span class="var-type">array</span>
 			<span class="var-name">$honeypots</span>
-			 = <span class="var-default">array()</span>			(line <span class="line-number">460</span>)
+			 = <span class="var-default">array()</span>			(line <span class="line-number">455</span>)
 		</span>
 	</div>
 
@@ -199,7 +217,7 @@
 		<span class="var-title">
 			<span class="var-type"><a href="../Botobor/Botobor_MetaData.html">Botobor_MetaData</a></span>
 			<span class="var-name">$meta</span>
-						(line <span class="line-number">453</span>)
+						(line <span class="line-number">448</span>)
 		</span>
 	</div>
 
@@ -233,7 +251,7 @@
 	
 	<div class="method-header">
 		<img src="../media/images/Constructor.png" />
-		<span class="method-title">Constructor Botobor_Form::__construct</span> (line <span class="line-number">471</span>)
+		<span class="method-title">Constructor Botobor_Form::__construct</span> (line <span class="line-number">466</span>)
 	</div> 
 	
 	<div class="method-signature">
@@ -266,7 +284,7 @@
 	
 	<div class="method-header">
 		<img src="../media/images/Method.png" />
-		<span class="method-title">Botobor_Form::addHoneypot</span> (line <span class="line-number">548</span>)
+		<span class="method-title">Botobor_Form::addHoneypot</span> (line <span class="line-number">543</span>)
 	</div> 
 	
 	<div class="method-signature">
@@ -299,7 +317,7 @@
 	
 	<div class="method-header">
 		<img src="../media/images/Method.png" />
-		<span class="method-title">Botobor_Form::createHoneypots</span> (line <span class="line-number">619</span>)
+		<span class="method-title">Botobor_Form::createHoneypots</span> (line <span class="line-number">614</span>)
 	</div> 
 	
 	<div class="method-signature">
@@ -335,7 +353,7 @@
 	
 	<div class="method-header">
 		<img src="../media/images/Method.png" />
-		<span class="method-title">Botobor_Form::createInput</span> (line <span class="line-number">593</span>)
+		<span class="method-title">Botobor_Form::createInput</span> (line <span class="line-number">588</span>)
 	</div> 
 	
 	<div class="method-signature">
@@ -377,7 +395,7 @@
 	
 	<div class="method-header">
 		<img src="../media/images/Method.png" />
-		<span class="method-title">Botobor_Form::getCode</span> (line <span class="line-number">561</span>)
+		<span class="method-title">Botobor_Form::getCode</span> (line <span class="line-number">556</span>)
 	</div> 
 	
 	<div class="method-signature">
@@ -405,7 +423,7 @@
 	
 	<div class="method-header">
 		<img src="../media/images/Method.png" />
-		<span class="method-title">Botobor_Form::setCheck</span> (line <span class="line-number">504</span>)
+		<span class="method-title">Botobor_Form::setCheck</span> (line <span class="line-number">499</span>)
 	</div> 
 	
 	<div class="method-signature">
@@ -442,7 +460,7 @@
 	
 	<div class="method-header">
 		<img src="../media/images/Method.png" />
-		<span class="method-title">Botobor_Form::setDelay</span> (line <span class="line-number">520</span>)
+		<span class="method-title">Botobor_Form::setDelay</span> (line <span class="line-number">515</span>)
 	</div> 
 	
 	<div class="method-signature">
@@ -474,7 +492,7 @@
 	
 	<div class="method-header">
 		<img src="../media/images/Method.png" />
-		<span class="method-title">Botobor_Form::setLifetime</span> (line <span class="line-number">533</span>)
+		<span class="method-title">Botobor_Form::setLifetime</span> (line <span class="line-number">528</span>)
 	</div> 
 	
 	<div class="method-signature">
@@ -506,7 +524,7 @@
 
 
 	<p class="notes" id="credit">
-		Документация создана Tue, 27 Dec 2011 09:06:01 +0400 при помощи <a href="http://www.phpdoc.org" target="_blank">phpDocumentor 1.4.3</a>
+		Документация создана Tue, 27 Dec 2011 09:11:24 +0400 при помощи <a href="http://www.phpdoc.org" target="_blank">phpDocumentor 1.4.3</a>
 	</p>
 	</div></body>
 </html>
