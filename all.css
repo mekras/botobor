@@ -1,0 +1,26 @@
+body
+{
+	background: white;
+	height: 100%;
+	margin: 0;
+	padding: 0;
+	width: 100%;
+}
+
+.page-head
+{
+	background: lightgray;
+}
+
+	.product-title
+	{
+		margin: 0;
+	}
+
+.fork-me
+{
+	border: none;
+	position: absolute;
+	right: 0;
+	top: 0;
+}
