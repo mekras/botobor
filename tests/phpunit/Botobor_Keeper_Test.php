@@ -31,6 +31,29 @@ class Botobor_Keeper_Test extends PHPUnit_Framework_TestCase
 	//-----------------------------------------------------------------------------
 
 	/**
+	 * @covers Botobor_Keeper::isResubmit
+	 */
+	public function test_isResubmit()
+	{
+		$meta = new Botobor_MetaData();
+		$data = array(
+			Botobor::META_FIELD_NAME => $meta->getEncoded()
+		);
+
+		$p_isHandled = new ReflectionProperty('Botobor_Keeper', 'isHandled');
+		$p_isHandled->setAccessible(true);
+		$_SERVER['REQUEST_METHOD'] = 'GET';
+
+		$_GET = $data;
+		$p_isHandled->setValue('Botobor_Keeper', false);
+		$this->assertFalse(Botobor_Keeper::isResubmit());
+
+		$_GET = $data;
+		$p_isHandled->setValue('Botobor_Keeper', false);
+		$this->assertTrue(Botobor_Keeper::isResubmit());
+	}
+
+	/**
 	 * @covers Botobor_Keeper::handleRequest
 	 * @covers Botobor_Keeper::testHoneypots
 	 * @covers Botobor_Keeper::testReferer

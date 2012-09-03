@@ -24,7 +24,7 @@
  * GNU с этой программой. Если Вы ее не получили, смотрите документ на
  * <http://www.gnu.org/licenses/>
  *
- * @version 0.3.0
+ * @version 0.3.1
  *
  * @copyright 2008-2011, Михаил Красильников, <mihalych@vsepofigu.ru>
  * @license http://www.gnu.org/licenses/gpl.txt  GPL License 3
@@ -66,10 +66,10 @@ class Botobor
 	 * @since 0.2.0
 	 */
 	private static $checks = array(
+		'referer' => true,
 		'delay' => true,
 		'lifetime' => true,
 		'honeypots' => true,
-		'referer' => true,
 	);
 
 	/**
@@ -172,10 +172,15 @@ class Botobor
 	/**
 	 * Включает или отключает проверку
 	 *
-	 * @param string $check  имя проверки (см. {@link getChecks()})
-	 * @param bool   $state  новое состояние
+	 * Проверки на роботов:
 	 *
-	 * @throws InvalidArgumentException  при неверном типе любого аргумента
+	 * - referer — проверка заголовка REFERER
+	 * - delay — проверка минимального времени между показом и отправкой формы
+	 * - lifetime — проверка максимального времени между показом и отправкой формы
+	 * - honeypots — проверка полями-приманками
+	 *
+	 * @param string $check  имя проверки
+	 * @param bool   $state  новое состояние
 	 *
 	 * @return void
 	 *
@@ -194,6 +199,11 @@ class Botobor
 
 /**
  * Мета-данные формы
+ *
+ * @property string $uid        уникальный идентификатор
+ * @property array  $checks     список проверок
+ * @property string $referer    URL формы
+ * @property int    $timestamp  время создания формы
  *
  * @package Botobor
  * @since 0.1.0
@@ -231,6 +241,11 @@ class Botobor_MetaData
 		if ($encodedData)
 		{
 			$this->import($encodedData);
+		}
+		else
+		{
+			// Задаём уникальный id формы, для проверки на повторную отправку
+			$this->uid = uniqid();
 		}
 	}
 	//-----------------------------------------------------------------------------
@@ -487,14 +502,13 @@ class Botobor_Form
 	/**
 	 * Включает или отключает проверку
 	 *
-	 * @param string $check  имя проверки (см. {@link Botobor::getChecks()})
+	 * @param string $check  имя проверки
 	 * @param bool   $state  новое состояние
-	 *
-	 * @throws InvalidArgumentException  при неверном типе любого аргумента
 	 *
 	 * @return void
 	 *
 	 * @since 0.2.0
+	 * @see Botobor::setCheck() для более подробной информации
 	 */
 	public function setCheck($check, $state)
 	{
@@ -679,6 +693,14 @@ class Botobor_Keeper
 	private static $isHuman = false;
 
 	/**
+	 * Признак повторной отправки формы
+	 *
+	 * @var bool
+	 * @since 0.3.1
+	 */
+	private static $isResubmit = false;
+
+	/**
 	 * Обрабатывает текущий запрос
 	 *
 	 * Если в текущем запросе содержатся мета-данные Ботобора, они извлекаются и проверяются.
@@ -702,6 +724,11 @@ class Botobor_Keeper
 	 */
 	public static function handleRequest(array &$req = null)
 	{
+		if (!isset($_SESSION['botobor']))
+		{
+			$_SESSION['botobor'] = array('handled' => array());
+		}
+
 		self::$isHandled = true;
 		self::$isHuman = true;
 
@@ -741,6 +768,10 @@ class Botobor_Keeper
 			self::testHoneypots($meta, $req) && // эта проверка обязательно должна быть первой. см. ниже
 			self::testReferer($meta) &&
 			self::testTimings($meta);
+
+		self::$isResubmit = in_array($meta->uid, $_SESSION['botobor']['handled']);
+
+		$_SESSION['botobor']['handled'] []= $meta->uid;
 	}
 	//-----------------------------------------------------------------------------
 
@@ -756,6 +787,23 @@ class Botobor_Keeper
 			self::handleRequest();
 		}
 		return self::$isHuman;
+	}
+	//-----------------------------------------------------------------------------
+
+	/**
+	 * Возвращает true если форма была отправлена повторно
+	 *
+	 * @return bool
+	 *
+	 * @since 0.3.1
+	 */
+	public static function isResubmit()
+	{
+		if (!self::$isHandled)
+		{
+			self::handleRequest();
+		}
+		return self::$isResubmit;
 	}
 	//-----------------------------------------------------------------------------
 
