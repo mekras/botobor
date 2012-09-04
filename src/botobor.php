@@ -6,28 +6,28 @@
  *
  * Основано на {@link http://nedbatchelder.com/text/stopbots.html}
  *
+ * ------------------------------------------------------------------------
  * ЛИЦЕНЗИЯ
  *
- * Данная программа является свободным программным обеспечением. Вы
- * вправе распространять ее и/или модифицировать в соответствии с
- * условиями версии 3 либо (по вашему выбору) с условиями более поздней
- * версии Стандартной Общественной Лицензии GNU, опубликованной Free
- * Software Foundation.
+ * Copyright 2012 DvaSlona Ltd.
  *
- * Мы распространяем эту программу в надежде на то, что она будет вам
- * полезной, однако НЕ ПРЕДОСТАВЛЯЕМ НА НЕЕ НИКАКИХ ГАРАНТИЙ, в том
- * числе ГАРАНТИИ ТОВАРНОГО СОСТОЯНИЯ ПРИ ПРОДАЖЕ и ПРИГОДНОСТИ ДЛЯ
- * ИСПОЛЬЗОВАНИЯ В КОНКРЕТНЫХ ЦЕЛЯХ. Для получения более подробной
- * информации ознакомьтесь со Стандартной Общественной Лицензией GNU.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- * Вы должны были получить копию Стандартной Общественной Лицензии
- * GNU с этой программой. Если Вы ее не получили, смотрите документ на
- * <http://www.gnu.org/licenses/>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * ------------------------------------------------------------------------
  *
  * @version 0.4.0
  *
  * @copyright 2008-2011, Михаил Красильников, <mihalych@vsepofigu.ru>
- * @license http://www.gnu.org/licenses/gpl.txt  GPL License 3
+ * @license http://www.apache.org/licenses/LICENSE-2.0.html  Apache License, Version 2.0
  * @author Михаил Красильников, <mihalych@vsepofigu.ru>
  *
  * @package Botobor

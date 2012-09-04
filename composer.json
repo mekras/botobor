@@ -1,3 +1,10 @@
 {
-    "name" : "mekras/botobor"
+    "name" : "mekras/botobor",
+    "type" : "library",
+    "description" : "PHP antispam library",
+    "license" : "Apache-2.0",
+    "require" :
+    {
+        "php": ">=5.0.0"
+    }
 }
