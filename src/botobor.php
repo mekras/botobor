@@ -759,14 +759,25 @@ class Botobor_Keeper
      * Возвращает true если форму отправил человек
      *
      * @return bool
+     * @deprecated Используйте {@link isRobot()}
      */
     public static function isHuman()
+    {
+        return !self::isRobot();
+    }
+
+    /**
+     * Возвращает true если форму отправил робот
+     *
+     * @return bool
+     */
+    public static function isRobot()
     {
         if (!self::$isHandled)
         {
             self::handleRequest();
         }
-        return self::$isHuman;
+        return !self::$isHuman;
     }
 
     /**
