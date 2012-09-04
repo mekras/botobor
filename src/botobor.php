@@ -24,7 +24,7 @@
  * GNU с этой программой. Если Вы ее не получили, смотрите документ на
  * <http://www.gnu.org/licenses/>
  *
- * @version 0.3.1
+ * @version 0.4.0
  *
  * @copyright 2008-2011, Михаил Красильников, <mihalych@vsepofigu.ru>
  * @license http://www.gnu.org/licenses/gpl.txt  GPL License 3
@@ -32,7 +32,6 @@
  *
  * @package Botobor
  */
-
 
 
 /**
@@ -394,9 +393,9 @@ class Botobor_MetaData
  * <code>
  * require 'botobor.php';
  * …
- * if (Botobor_Keeper::isHuman())
+ * if (Botobor_Keeper::isRobot())
  * {
- *     // Форма отправлена человеком, можно обрабатывать её.
+ *     // Форма отправлена роботом, выводим сообщение об ошибке.
  * }
  * </code>
  *
@@ -423,7 +422,7 @@ class Botobor_MetaData
  * В этом примере поле «name» будет сделано приманкой. При этом имя настоящего поля «name» будет
  * заменено на случайное значение. Обратное преобразование будет сделано во время вызова
  * метода {@link Botobor_Keeper::handleRequest()} (вызывается автоматически из
- * {@link Botobor_Keeper::isHuman()}).
+ * {@link Botobor_Keeper::isRobot()}).
  *
  * <code>
  * $bform = new Botobor_Form($html);
@@ -666,12 +665,12 @@ class Botobor_Keeper
     private static $isHandled = false;
 
     /**
-     * Признак того, что форму заполнил человек
+     * Признак того, что форму заполнил робот
      *
      * @var bool
      * @since 0.1.0
      */
-    private static $isHuman = false;
+    private static $isRobot = false;
 
     /**
      * Признак повторной отправки формы
@@ -687,10 +686,10 @@ class Botobor_Keeper
      * Если в текущем запросе содержатся мета-данные Ботобора, они извлекаются и проверяются.
      * Проводится обратная замена полей-приманок на исходные поля формы.
      *
-     * Этот метод вызывается автоматически из {@link isHuman()}. Но разработчики могут вызывать его
+     * Этот метод вызывается автоматически из {@link isRobot()}. Но разработчики могут вызывать его
      * самостоятельно, если их приложение получает аргументы запроса не напрямую из $_GET или $_POST,
      * а через посредничество другого класса, который извлекает аргументы до обращения к
-     * {@link isHuman()}. В этом случае надо вызвать {@link handleRequest()} до создания
+     * {@link isRobot()}. В этом случае надо вызвать {@link handleRequest()} до создания
      * класса-посредника.
      *
      * Другой способ, если значения извлечённые из $_GET/$_POST хранятся классом-посредником в
@@ -711,7 +710,7 @@ class Botobor_Keeper
         }
 
         self::$isHandled = true;
-        self::$isHuman = true;
+        self::$isRobot = false;
 
         /*
          * Если аргументы не переданы, получаем их самостоятельно
@@ -729,7 +728,7 @@ class Botobor_Keeper
                     break;
 
                 default:
-                    self::$isHuman = false;
+                    self::$isRobot = true;
                     return;
             }
         }
@@ -737,18 +736,19 @@ class Botobor_Keeper
         /* Проверяем наличие мета-данных */
         if (!isset($req[Botobor::META_FIELD_NAME]))
         {
-            self::$isHuman = false;
+            self::$isRobot = true;
             return;
         }
 
         // Получаем мета-данные
         $meta = new Botobor_MetaData($req[Botobor::META_FIELD_NAME]);
 
-        self::$isHuman =
-            $meta->isValid() &&
-            self::testHoneypots($meta, $req) && // эта проверка обязательно должна быть первой. см. ниже
-            self::testReferer($meta) &&
-            self::testTimings($meta);
+        self::$isRobot =
+            !$meta->isValid() ||
+            // эта проверка обязательно должна быть первой. см. ниже
+            !self::testHoneypots($meta, $req) ||
+            !self::testReferer($meta) ||
+            !self::testTimings($meta);
 
         self::$isResubmit = in_array($meta->uid, $_SESSION['botobor']['handled']);
 
@@ -770,6 +770,8 @@ class Botobor_Keeper
      * Возвращает true если форму отправил робот
      *
      * @return bool
+     *
+     * @since 0.4.0
      */
     public static function isRobot()
     {
@@ -777,7 +779,7 @@ class Botobor_Keeper
         {
             self::handleRequest();
         }
-        return !self::$isHuman;
+        return self::$isRobot;
     }
 
     /**

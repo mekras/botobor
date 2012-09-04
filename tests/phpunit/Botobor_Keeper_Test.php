@@ -9,11 +9,12 @@ class Botobor_Keeper_Test extends PHPUnit_Framework_TestCase
 	 */
 	protected function tearDown()
 	{
-		$p_isHuman = new ReflectionProperty('Botobor_Keeper', 'isHuman');
-		$p_isHuman->setAccessible(true);
-		$p_isHuman->setValue('Botobor_Keeper', false);
+		$p_isRobot = new ReflectionProperty('Botobor_Keeper', 'isRobot');
+		$p_isRobot->setAccessible(true);
+		$p_isRobot->setValue('Botobor_Keeper', false);
 	}
 	//-----------------------------------------------------------------------------
+
 	/**
 	 * @covers Botobor_Keeper::isHuman
 	 */
@@ -23,17 +24,36 @@ class Botobor_Keeper_Test extends PHPUnit_Framework_TestCase
         $p_isHandled->setAccessible(true);
         $p_isHandled->setValue('Botobor_Keeper', true);
 
-        $p_isHuman = new ReflectionProperty('Botobor_Keeper', 'isHuman');
-        $p_isHuman->setAccessible(true);
+        $p_isRobot = new ReflectionProperty('Botobor_Keeper', 'isRobot');
+        $p_isRobot->setAccessible(true);
 
-        $p_isHuman->setValue('Botobor_Keeper', false);
+        $p_isRobot->setValue('Botobor_Keeper', true);
         $this->assertFalse(Botobor_Keeper::isHuman());
 
-        $p_isHuman->setValue('Botobor_Keeper', true);
+        $p_isRobot->setValue('Botobor_Keeper', false);
 		$this->assertTrue(Botobor_Keeper::isHuman());
 	}
 
-	/**
+    /**
+     * @covers Botobor_Keeper::isRobot
+     */
+    public function test_isRobot()
+    {
+        $p_isHandled = new ReflectionProperty('Botobor_Keeper', 'isHandled');
+        $p_isHandled->setAccessible(true);
+        $p_isHandled->setValue('Botobor_Keeper', true);
+
+        $p_isRobot = new ReflectionProperty('Botobor_Keeper', 'isRobot');
+        $p_isRobot->setAccessible(true);
+
+        $p_isRobot->setValue('Botobor_Keeper', false);
+        $this->assertFalse(Botobor_Keeper::isRobot());
+
+        $p_isRobot->setValue('Botobor_Keeper', true);
+        $this->assertTrue(Botobor_Keeper::isRobot());
+    }
+
+    /**
 	 * @covers Botobor_Keeper::isResubmit
 	 */
 	public function test_isResubmit()
@@ -61,6 +81,7 @@ class Botobor_Keeper_Test extends PHPUnit_Framework_TestCase
 	 * @covers Botobor_Keeper::testHoneypots
 	 * @covers Botobor_Keeper::testReferer
 	 * @covers Botobor_Keeper::testTimings
+     * @covers Botobor_Keeper::isRobot
 	 */
 	public function test_handleRequest()
 	{
@@ -70,19 +91,21 @@ class Botobor_Keeper_Test extends PHPUnit_Framework_TestCase
 			Botobor::setCheck($check, true);
 		}
 
-		Botobor_Keeper::handleRequest();
-		$this->assertFalse(Botobor_Keeper::isHuman());
+        $p_isHandled = new ReflectionProperty('Botobor_Keeper', 'isHandled');
+        $p_isHandled->setAccessible(true);
+        $p_isHandled->setValue('Botobor_Keeper', false);
+		$this->assertTrue(Botobor_Keeper::isRobot());
 
 
 		$_SERVER['REQUEST_METHOD'] = 'GET';
 		Botobor_Keeper::handleRequest();
-		$this->assertFalse(Botobor_Keeper::isHuman());
+		$this->assertTrue(Botobor_Keeper::isRobot());
 
 
 		$_SERVER['REQUEST_METHOD'] = 'POST';
 		$_POST[Botobor::META_FIELD_NAME] = true;
 		Botobor_Keeper::handleRequest();
-		$this->assertFalse(Botobor_Keeper::isHuman());
+		$this->assertTrue(Botobor_Keeper::isRobot());
 
 
 		$meta = new Botobor_MetaData();
@@ -94,7 +117,7 @@ class Botobor_Keeper_Test extends PHPUnit_Framework_TestCase
 			'aaa' => 'HumanName',
 		);
 		Botobor_Keeper::handleRequest($data);
-		$this->assertFalse(Botobor_Keeper::isHuman());
+		$this->assertTrue(Botobor_Keeper::isRobot());
 		$this->assertEquals('HumanName', $data['name']);
 
 
@@ -102,7 +125,7 @@ class Botobor_Keeper_Test extends PHPUnit_Framework_TestCase
 		$meta->checks = Botobor::getChecks();
 		$_POST[Botobor::META_FIELD_NAME] = $meta->getEncoded() . 'break_sign';
 		Botobor_Keeper::handleRequest();
-		$this->assertFalse(Botobor_Keeper::isHuman());
+		$this->assertTrue(Botobor_Keeper::isRobot());
 
 
 		$meta = new Botobor_MetaData();
@@ -111,7 +134,7 @@ class Botobor_Keeper_Test extends PHPUnit_Framework_TestCase
 		$meta->delay = 10;
 		$data = array(Botobor::META_FIELD_NAME => $meta->getEncoded());
 		Botobor_Keeper::handleRequest($data);
-		$this->assertFalse(Botobor_Keeper::isHuman());
+		$this->assertTrue(Botobor_Keeper::isRobot());
 
 
 		$meta = new Botobor_MetaData();
@@ -120,7 +143,7 @@ class Botobor_Keeper_Test extends PHPUnit_Framework_TestCase
 		$meta->lifetime = 10;
 		$_POST[Botobor::META_FIELD_NAME] = $meta->getEncoded();
 		Botobor_Keeper::handleRequest();
-		$this->assertFalse(Botobor_Keeper::isHuman());
+		$this->assertTrue(Botobor_Keeper::isRobot());
 
 
 		$meta = new Botobor_MetaData();
@@ -131,7 +154,7 @@ class Botobor_Keeper_Test extends PHPUnit_Framework_TestCase
 		$meta->referer = 'http://example.org/index.php';
 		$_POST[Botobor::META_FIELD_NAME] = $meta->getEncoded();
 		Botobor_Keeper::handleRequest();
-		$this->assertFalse(Botobor_Keeper::isHuman());
+		$this->assertTrue(Botobor_Keeper::isRobot());
 
 
 		$meta = new Botobor_MetaData();
@@ -143,7 +166,7 @@ class Botobor_Keeper_Test extends PHPUnit_Framework_TestCase
 		$_POST[Botobor::META_FIELD_NAME] = $meta->getEncoded();
 		$_SERVER['HTTP_REFERER'] = 'http://example.org/';
 		Botobor_Keeper::handleRequest();
-		$this->assertFalse(Botobor_Keeper::isHuman());
+		$this->assertTrue(Botobor_Keeper::isRobot());
 
 
 		$meta = new Botobor_MetaData();
@@ -155,7 +178,7 @@ class Botobor_Keeper_Test extends PHPUnit_Framework_TestCase
 		$_POST[Botobor::META_FIELD_NAME] = $meta->getEncoded();
 		$_SERVER['HTTP_REFERER'] = 'http://example.org/index.php';
 		Botobor_Keeper::handleRequest();
-		$this->assertTrue(Botobor_Keeper::isHuman());
+		$this->assertFalse(Botobor_Keeper::isRobot());
 	}
 	//-----------------------------------------------------------------------------
 
@@ -169,7 +192,7 @@ class Botobor_Keeper_Test extends PHPUnit_Framework_TestCase
 		$meta->aliases = array('aaa' => 'name');
 		$req[Botobor::META_FIELD_NAME] = $meta->getEncoded();
 		Botobor_Keeper::handleRequest($req);
-		$this->assertFalse(Botobor_Keeper::isHuman());
+		$this->assertTrue(Botobor_Keeper::isRobot());
 		$this->assertEquals('HumanName', $req['name']);
 	}
 	//-----------------------------------------------------------------------------
