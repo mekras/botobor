@@ -657,12 +657,19 @@ class Botobor_Form
 class Botobor_Keeper
 {
     /**
+     * Экземпляр-одиночка
+     * @var self
+     * @since 0.4.0
+     */
+    private static $instance = null;
+
+    /**
      * Признак того, что запрос уже обработан
      *
      * @var bool
      * @since 0.1.0
      */
-    private static $isHandled = false;
+    private $isHandled = false;
 
     /**
      * Признак того, что форму заполнил робот
@@ -670,7 +677,7 @@ class Botobor_Keeper
      * @var bool
      * @since 0.1.0
      */
-    private static $isRobot = false;
+    private $isRobot = false;
 
     /**
      * Признак повторной отправки формы
@@ -678,7 +685,7 @@ class Botobor_Keeper
      * @var bool
      * @since 0.3.1
      */
-    private static $isResubmit = false;
+    private $isResubmit = false;
 
     /**
      * Обрабатывает текущий запрос
@@ -702,15 +709,15 @@ class Botobor_Keeper
      *
      * @since 0.1.0
      */
-    public static function handleRequest(array &$req = null)
+    public function handleRequest(array &$req = null)
     {
         if (!isset($_SESSION['botobor']))
         {
             $_SESSION['botobor'] = array('handled' => array());
         }
 
-        self::$isHandled = true;
-        self::$isRobot = false;
+        $this->isHandled = true;
+        $this->isRobot = false;
 
         /*
          * Если аргументы не переданы, получаем их самостоятельно
@@ -728,7 +735,7 @@ class Botobor_Keeper
                     break;
 
                 default:
-                    self::$isRobot = true;
+                    $this->isRobot = true;
                     return;
             }
         }
@@ -736,34 +743,23 @@ class Botobor_Keeper
         /* Проверяем наличие мета-данных */
         if (!isset($req[Botobor::META_FIELD_NAME]))
         {
-            self::$isRobot = true;
+            $this->isRobot = true;
             return;
         }
 
         // Получаем мета-данные
         $meta = new Botobor_MetaData($req[Botobor::META_FIELD_NAME]);
 
-        self::$isRobot =
+        $this->isRobot =
             !$meta->isValid() ||
             // эта проверка обязательно должна быть первой. см. ниже
-            !self::testHoneypots($meta, $req) ||
-            !self::testReferer($meta) ||
-            !self::testTimings($meta);
+            !$this->testHoneypots($meta, $req) ||
+            !$this->testReferer($meta) ||
+            !$this->testTimings($meta);
 
-        self::$isResubmit = in_array($meta->uid, $_SESSION['botobor']['handled']);
+        $this->isResubmit = in_array($meta->uid, $_SESSION['botobor']['handled']);
 
         $_SESSION['botobor']['handled'] []= $meta->uid;
-    }
-
-    /**
-     * Возвращает true если форму отправил человек
-     *
-     * @return bool
-     * @deprecated Используйте {@link isRobot()}
-     */
-    public static function isHuman()
-    {
-        return !self::isRobot();
     }
 
     /**
@@ -773,13 +769,13 @@ class Botobor_Keeper
      *
      * @since 0.4.0
      */
-    public static function isRobot()
+    public function isRobot()
     {
-        if (!self::$isHandled)
+        if (!$this->isHandled)
         {
-            self::handleRequest();
+            $this->handleRequest();
         }
-        return self::$isRobot;
+        return $this->isRobot;
     }
 
     /**
@@ -789,13 +785,43 @@ class Botobor_Keeper
      *
      * @since 0.3.1
      */
-    public static function isResubmit()
+    public function isResubmit()
     {
-        if (!self::$isHandled)
+        if (!$this->isHandled)
         {
-            self::handleRequest();
+            $this->handleRequest();
         }
-        return self::$isResubmit;
+        return $this->isResubmit;
+    }
+
+    /**
+     * Возвращает экземпляр-одиночку класса {@link Botobor_Keeper}
+     *
+     * @return Botobor_Keeper
+     *
+     * @since 0.4.0
+     */
+    public static function get()
+    {
+        if (null === self::$instance)
+        {
+            self::$instance = new self();
+        }
+        return self::$instance;
+    }
+
+    /**
+     * Запрещает создание объектов этого класса другими классами
+     */
+    private function __construct()
+    {
+    }
+
+    /**
+     * Запрещает клонирование объекта
+     */
+    private function __clone()
+    {
     }
 
     /**
@@ -808,7 +834,7 @@ class Botobor_Keeper
      *
      * @since 0.3.0
      */
-    private static function testHoneypots(Botobor_MetaData $meta, array &$req)
+    private function testHoneypots(Botobor_MetaData $meta, array &$req)
     {
         $result = true;
         if ($meta->aliases)
@@ -837,7 +863,7 @@ class Botobor_Keeper
      *
      * @since 0.3.0
      */
-    private static function testReferer(Botobor_MetaData $meta)
+    private function testReferer(Botobor_MetaData $meta)
     {
         return
             @!$meta->checks['referer'] ||
@@ -854,7 +880,7 @@ class Botobor_Keeper
      *
      * @since 0.3.0
      */
-    private static function testTimings(Botobor_MetaData $meta)
+    private function testTimings(Botobor_MetaData $meta)
     {
         /* Проверяем задержку */
         if (

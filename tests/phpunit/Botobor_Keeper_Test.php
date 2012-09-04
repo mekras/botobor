@@ -11,27 +11,7 @@ class Botobor_Keeper_Test extends PHPUnit_Framework_TestCase
 	{
 		$p_isRobot = new ReflectionProperty('Botobor_Keeper', 'isRobot');
 		$p_isRobot->setAccessible(true);
-		$p_isRobot->setValue('Botobor_Keeper', false);
-	}
-	//-----------------------------------------------------------------------------
-
-	/**
-	 * @covers Botobor_Keeper::isHuman
-	 */
-	public function test_isHuman()
-	{
-        $p_isHandled = new ReflectionProperty('Botobor_Keeper', 'isHandled');
-        $p_isHandled->setAccessible(true);
-        $p_isHandled->setValue('Botobor_Keeper', true);
-
-        $p_isRobot = new ReflectionProperty('Botobor_Keeper', 'isRobot');
-        $p_isRobot->setAccessible(true);
-
-        $p_isRobot->setValue('Botobor_Keeper', true);
-        $this->assertFalse(Botobor_Keeper::isHuman());
-
-        $p_isRobot->setValue('Botobor_Keeper', false);
-		$this->assertTrue(Botobor_Keeper::isHuman());
+		$p_isRobot->setValue(Botobor_Keeper::get(), false);
 	}
 
     /**
@@ -41,16 +21,16 @@ class Botobor_Keeper_Test extends PHPUnit_Framework_TestCase
     {
         $p_isHandled = new ReflectionProperty('Botobor_Keeper', 'isHandled');
         $p_isHandled->setAccessible(true);
-        $p_isHandled->setValue('Botobor_Keeper', true);
+        $p_isHandled->setValue(Botobor_Keeper::get(), true);
 
         $p_isRobot = new ReflectionProperty('Botobor_Keeper', 'isRobot');
         $p_isRobot->setAccessible(true);
 
-        $p_isRobot->setValue('Botobor_Keeper', false);
-        $this->assertFalse(Botobor_Keeper::isRobot());
+        $p_isRobot->setValue(Botobor_Keeper::get(), false);
+        $this->assertFalse(Botobor_Keeper::get()->isRobot());
 
-        $p_isRobot->setValue('Botobor_Keeper', true);
-        $this->assertTrue(Botobor_Keeper::isRobot());
+        $p_isRobot->setValue(Botobor_Keeper::get(), true);
+        $this->assertTrue(Botobor_Keeper::get()->isRobot());
     }
 
     /**
@@ -68,12 +48,12 @@ class Botobor_Keeper_Test extends PHPUnit_Framework_TestCase
 		$_SERVER['REQUEST_METHOD'] = 'GET';
 
 		$_GET = $data;
-		$p_isHandled->setValue('Botobor_Keeper', false);
-		$this->assertFalse(Botobor_Keeper::isResubmit());
+		$p_isHandled->setValue(Botobor_Keeper::get(), false);
+		$this->assertFalse(Botobor_Keeper::get()->isResubmit());
 
 		$_GET = $data;
-		$p_isHandled->setValue('Botobor_Keeper', false);
-		$this->assertTrue(Botobor_Keeper::isResubmit());
+		$p_isHandled->setValue(Botobor_Keeper::get(), false);
+		$this->assertTrue(Botobor_Keeper::get()->isResubmit());
 	}
 
 	/**
@@ -93,19 +73,19 @@ class Botobor_Keeper_Test extends PHPUnit_Framework_TestCase
 
         $p_isHandled = new ReflectionProperty('Botobor_Keeper', 'isHandled');
         $p_isHandled->setAccessible(true);
-        $p_isHandled->setValue('Botobor_Keeper', false);
-		$this->assertTrue(Botobor_Keeper::isRobot());
+        $p_isHandled->setValue(Botobor_Keeper::get(), false);
+		$this->assertTrue(Botobor_Keeper::get()->isRobot());
 
 
 		$_SERVER['REQUEST_METHOD'] = 'GET';
-		Botobor_Keeper::handleRequest();
-		$this->assertTrue(Botobor_Keeper::isRobot());
+		Botobor_Keeper::get()->handleRequest();
+		$this->assertTrue(Botobor_Keeper::get()->isRobot());
 
 
 		$_SERVER['REQUEST_METHOD'] = 'POST';
 		$_POST[Botobor::META_FIELD_NAME] = true;
-		Botobor_Keeper::handleRequest();
-		$this->assertTrue(Botobor_Keeper::isRobot());
+		Botobor_Keeper::get()->handleRequest();
+		$this->assertTrue(Botobor_Keeper::get()->isRobot());
 
 
 		$meta = new Botobor_MetaData();
@@ -116,16 +96,16 @@ class Botobor_Keeper_Test extends PHPUnit_Framework_TestCase
 			'name' => 'RobotName',
 			'aaa' => 'HumanName',
 		);
-		Botobor_Keeper::handleRequest($data);
-		$this->assertTrue(Botobor_Keeper::isRobot());
+		Botobor_Keeper::get()->handleRequest($data);
+		$this->assertTrue(Botobor_Keeper::get()->isRobot());
 		$this->assertEquals('HumanName', $data['name']);
 
 
 		$meta = new Botobor_MetaData();
 		$meta->checks = Botobor::getChecks();
 		$_POST[Botobor::META_FIELD_NAME] = $meta->getEncoded() . 'break_sign';
-		Botobor_Keeper::handleRequest();
-		$this->assertTrue(Botobor_Keeper::isRobot());
+		Botobor_Keeper::get()->handleRequest();
+		$this->assertTrue(Botobor_Keeper::get()->isRobot());
 
 
 		$meta = new Botobor_MetaData();
@@ -133,8 +113,8 @@ class Botobor_Keeper_Test extends PHPUnit_Framework_TestCase
 		$meta->timestamp = time();
 		$meta->delay = 10;
 		$data = array(Botobor::META_FIELD_NAME => $meta->getEncoded());
-		Botobor_Keeper::handleRequest($data);
-		$this->assertTrue(Botobor_Keeper::isRobot());
+		Botobor_Keeper::get()->handleRequest($data);
+		$this->assertTrue(Botobor_Keeper::get()->isRobot());
 
 
 		$meta = new Botobor_MetaData();
@@ -142,8 +122,8 @@ class Botobor_Keeper_Test extends PHPUnit_Framework_TestCase
 		$meta->timestamp = time() - 11 * 60;
 		$meta->lifetime = 10;
 		$_POST[Botobor::META_FIELD_NAME] = $meta->getEncoded();
-		Botobor_Keeper::handleRequest();
-		$this->assertTrue(Botobor_Keeper::isRobot());
+		Botobor_Keeper::get()->handleRequest();
+		$this->assertTrue(Botobor_Keeper::get()->isRobot());
 
 
 		$meta = new Botobor_MetaData();
@@ -153,8 +133,8 @@ class Botobor_Keeper_Test extends PHPUnit_Framework_TestCase
 		$meta->lifetime = 10;
 		$meta->referer = 'http://example.org/index.php';
 		$_POST[Botobor::META_FIELD_NAME] = $meta->getEncoded();
-		Botobor_Keeper::handleRequest();
-		$this->assertTrue(Botobor_Keeper::isRobot());
+		Botobor_Keeper::get()->handleRequest();
+		$this->assertTrue(Botobor_Keeper::get()->isRobot());
 
 
 		$meta = new Botobor_MetaData();
@@ -165,8 +145,8 @@ class Botobor_Keeper_Test extends PHPUnit_Framework_TestCase
 		$meta->referer = 'http://example.org/index.php';
 		$_POST[Botobor::META_FIELD_NAME] = $meta->getEncoded();
 		$_SERVER['HTTP_REFERER'] = 'http://example.org/';
-		Botobor_Keeper::handleRequest();
-		$this->assertTrue(Botobor_Keeper::isRobot());
+		Botobor_Keeper::get()->handleRequest();
+		$this->assertTrue(Botobor_Keeper::get()->isRobot());
 
 
 		$meta = new Botobor_MetaData();
@@ -177,10 +157,9 @@ class Botobor_Keeper_Test extends PHPUnit_Framework_TestCase
 		$meta->referer = 'http://example.org/index.php';
 		$_POST[Botobor::META_FIELD_NAME] = $meta->getEncoded();
 		$_SERVER['HTTP_REFERER'] = 'http://example.org/index.php';
-		Botobor_Keeper::handleRequest();
-		$this->assertFalse(Botobor_Keeper::isRobot());
+		Botobor_Keeper::get()->handleRequest();
+		$this->assertFalse(Botobor_Keeper::get()->isRobot());
 	}
-	//-----------------------------------------------------------------------------
 
 	/**
 	 * @covers Botobor_Keeper::handleRequest
@@ -191,11 +170,10 @@ class Botobor_Keeper_Test extends PHPUnit_Framework_TestCase
 		$meta = new Botobor_MetaData();
 		$meta->aliases = array('aaa' => 'name');
 		$req[Botobor::META_FIELD_NAME] = $meta->getEncoded();
-		Botobor_Keeper::handleRequest($req);
-		$this->assertTrue(Botobor_Keeper::isRobot());
+
+        $keeper = Botobor_Keeper::get();
+		$keeper->handleRequest($req);
+		$this->assertTrue(Botobor_Keeper::get()->isRobot());
 		$this->assertEquals('HumanName', $req['name']);
 	}
-	//-----------------------------------------------------------------------------
-
-	/* */
 }
