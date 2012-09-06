@@ -65,10 +65,11 @@ class Botobor_Keeper_Test extends PHPUnit_Framework_TestCase
 	 */
 	public function test_handleRequest()
 	{
-		$checks = Botobor::getChecks();
-		foreach ($checks as $check => $state)
+        /** @var Botobor_MetaData $meta */
+        $checks = get_botobor_checks();
+        foreach ($checks as $check => $state)
 		{
-			Botobor::setCheck($check, true);
+			Botobor::set('check.' . $check, true);
 		}
 
         $p_isHandled = new ReflectionProperty('Botobor_Keeper', 'isHandled');
@@ -89,8 +90,9 @@ class Botobor_Keeper_Test extends PHPUnit_Framework_TestCase
 
 
 		$meta = new Botobor_MetaData();
-		$meta->checks = Botobor::getChecks();
-		$meta->aliases = array('aaa' => 'name');
+        /** @var Botobor_MetaData $meta */
+        $meta->checks = get_botobor_checks();
+        $meta->aliases = array('aaa' => 'name');
 		$data = array(
 			Botobor::META_FIELD_NAME => $meta->getEncoded(),
 			'name' => 'RobotName',
@@ -102,15 +104,17 @@ class Botobor_Keeper_Test extends PHPUnit_Framework_TestCase
 
 
 		$meta = new Botobor_MetaData();
-		$meta->checks = Botobor::getChecks();
-		$_POST[Botobor::META_FIELD_NAME] = $meta->getEncoded() . 'break_sign';
+        /** @var Botobor_MetaData $meta */
+        $meta->checks = get_botobor_checks();
+        $_POST[Botobor::META_FIELD_NAME] = $meta->getEncoded() . 'break_sign';
 		Botobor_Keeper::get()->handleRequest();
 		$this->assertTrue(Botobor_Keeper::get()->isRobot());
 
 
 		$meta = new Botobor_MetaData();
-		$meta->checks = Botobor::getChecks();
-		$meta->timestamp = time();
+        /** @var Botobor_MetaData $meta */
+        $meta->checks = get_botobor_checks();
+        $meta->timestamp = time();
 		$meta->delay = 10;
 		$data = array(Botobor::META_FIELD_NAME => $meta->getEncoded());
 		Botobor_Keeper::get()->handleRequest($data);
@@ -118,8 +122,9 @@ class Botobor_Keeper_Test extends PHPUnit_Framework_TestCase
 
 
 		$meta = new Botobor_MetaData();
-		$meta->checks = Botobor::getChecks();
-		$meta->timestamp = time() - 11 * 60;
+        /** @var Botobor_MetaData $meta */
+        $meta->checks = get_botobor_checks();
+        $meta->timestamp = time() - 11 * 60;
 		$meta->lifetime = 10;
 		$_POST[Botobor::META_FIELD_NAME] = $meta->getEncoded();
 		Botobor_Keeper::get()->handleRequest();
@@ -127,8 +132,9 @@ class Botobor_Keeper_Test extends PHPUnit_Framework_TestCase
 
 
 		$meta = new Botobor_MetaData();
-		$meta->checks = Botobor::getChecks();
-		$meta->timestamp = time() - 15;
+        /** @var Botobor_MetaData $meta */
+        $meta->checks = get_botobor_checks();
+        $meta->timestamp = time() - 15;
 		$meta->delay = 10;
 		$meta->lifetime = 10;
 		$meta->referer = 'http://example.org/index.php';
@@ -138,8 +144,9 @@ class Botobor_Keeper_Test extends PHPUnit_Framework_TestCase
 
 
 		$meta = new Botobor_MetaData();
-		$meta->checks = Botobor::getChecks();
-		$meta->timestamp = time() - 15;
+        /** @var Botobor_MetaData $meta */
+        $meta->checks = get_botobor_checks();
+        $meta->timestamp = time() - 15;
 		$meta->delay = 10;
 		$meta->lifetime = 10;
 		$meta->referer = 'http://example.org/index.php';
@@ -150,8 +157,9 @@ class Botobor_Keeper_Test extends PHPUnit_Framework_TestCase
 
 
 		$meta = new Botobor_MetaData();
-		$meta->checks = Botobor::getChecks();
-		$meta->timestamp = time() - 15;
+        /** @var Botobor_MetaData $meta */
+        $meta->checks = get_botobor_checks();
+        $meta->timestamp = time() - 15;
 		$meta->delay = 10;
 		$meta->lifetime = 10;
 		$meta->referer = 'http://example.org/index.php';

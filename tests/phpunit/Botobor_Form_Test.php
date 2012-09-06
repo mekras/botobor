@@ -16,7 +16,8 @@ class Botobor_Form_Test extends PHPUnit_Framework_TestCase
 			disableOriginalConstructor()->getMock();
 		$_SERVER['REQUEST_URI'] = '/index.php';
 		$_SERVER['HTTP_HOST'] = 'example.org';
-		Botobor::setDefault('honeypots', array('name', 'mail'));
+		Botobor::set('honeypots', array('name', 'mail'));
+        /** @var Botobor_Form $form */
 		$form->__construct('[form]');
 
 		$p_meta = new ReflectionProperty('Botobor_Form', 'meta');
@@ -27,7 +28,6 @@ class Botobor_Form_Test extends PHPUnit_Framework_TestCase
 		$p_honeypots->setAccessible(true);
 		$this->assertEquals(array('name', 'mail'), $p_honeypots->getValue($form));
 	}
-	//-----------------------------------------------------------------------------
 
 	/**
 	 * @covers Botobor_Form::setCheck
@@ -36,13 +36,13 @@ class Botobor_Form_Test extends PHPUnit_Framework_TestCase
 	{
 		$form = $this->getMockBuilder('Botobor_Form')->setConstructorArgs(array('<foo>'))->
 			setMethods(array('getCode'))->getMock();
+        /** @var Botobor_Form $form */
 		$form->setCheck('referer', false);
 
 		$p_meta = new ReflectionProperty('Botobor_Form', 'meta');
 		$p_meta->setAccessible(true);
 		$this->assertFalse($p_meta->getValue($form)->checks['referer']);
 	}
-	//-----------------------------------------------------------------------------
 
 	/**
 	 * @covers Botobor_Form::addHoneypot
@@ -51,12 +51,12 @@ class Botobor_Form_Test extends PHPUnit_Framework_TestCase
 	{
 		$form = $this->getMockBuilder('Botobor_Form')->setMethods(array('getCode'))->
 			disableOriginalConstructor()->getMock();
+        /** @var Botobor_Form $form */
 		$form->addHoneypot('foo');
 		$p_honeypots = new ReflectionProperty('Botobor_Form', 'honeypots');
 		$p_honeypots->setAccessible(true);
 		$this->assertEquals(array('foo'), $p_honeypots->getValue($form));
 	}
-	//-----------------------------------------------------------------------------
 
 	/**
 	 * @covers Botobor_Form::setDelay
@@ -64,12 +64,12 @@ class Botobor_Form_Test extends PHPUnit_Framework_TestCase
 	public function test_setDelay()
 	{
 		$form = $this->getMockForAbstractClass('Botobor_Form', array('[form]'));
+        /** @var Botobor_Form $form */
 		$form->setDelay(123);
 		$p_meta = new ReflectionProperty('Botobor_Form', 'meta');
 		$p_meta->setAccessible(true);
 		$this->assertEquals(123, $p_meta->getValue($form)->delay);
 	}
-	//-----------------------------------------------------------------------------
 
 	/**
 	 * @covers Botobor_Form::setLifetime
@@ -77,12 +77,12 @@ class Botobor_Form_Test extends PHPUnit_Framework_TestCase
 	public function test_setLifetime()
 	{
 		$form = $this->getMockForAbstractClass('Botobor_Form', array('[form]'));
+        /** @var Botobor_Form $form */
 		$form->setLifetime(123);
 		$p_meta = new ReflectionProperty('Botobor_Form', 'meta');
 		$p_meta->setAccessible(true);
 		$this->assertEquals(123, $p_meta->getValue($form)->lifetime);
 	}
-	//-----------------------------------------------------------------------------
 
 	/**
 	* @covers Botobor_Form::createInput
@@ -98,7 +98,6 @@ class Botobor_Form_Test extends PHPUnit_Framework_TestCase
 		$this->assertEquals('<input type="a" name="b" value="c" d>',
 		$m_createInput->invoke($form, 'a', 'b', 'c', 'd'));
 	}
-	//-----------------------------------------------------------------------------
 
 	/**
 	 * @covers Botobor_Form::createHoneypots
@@ -109,10 +108,9 @@ class Botobor_Form_Test extends PHPUnit_Framework_TestCase
 		$m_createHoneypots = new ReflectionMethod('Botobor_Form', 'createHoneypots');
 		$m_createHoneypots->setAccessible(true);
 		$this->assertRegExp(
-				'~<form><div style="display: none;"><input type="text" name="a"></div><input name=".+"></form>~',
+			'~<form><div style="display: none;"><input type="text" name="a"></div><input name=".+"></form>~',
 		$m_createHoneypots->invoke($form, '<form><input name="a"></form>', array('a', 'b')));
 	}
-	//-----------------------------------------------------------------------------
 
 	/**
 	 * @covers Botobor_Form::getCode
@@ -128,7 +126,8 @@ class Botobor_Form_Test extends PHPUnit_Framework_TestCase
 		with('hidden', 'botobor_meta_data', '[metadata]')->will($this->returnValue('<meta>'));
 
 		$meta = $this->getMock('Botobor_MetaData', array('getEncoded'));
-		$meta->checks = Botobor::getChecks();
+        /** @var Botobor_MetaData $meta */
+		$meta->checks = get_botobor_checks();
 		$meta->expects($this->once())->method('getEncoded')->will($this->returnValue('[metadata]'));
 
 		$p_meta = new ReflectionProperty('Botobor_Form', 'meta');
@@ -136,9 +135,9 @@ class Botobor_Form_Test extends PHPUnit_Framework_TestCase
 		$p_meta->setValue($form, $meta);
 
 		$this->assertEquals('<form><div style="display: none;"><meta></div><honeypots></form>',
-		$form->getCode());
+        /** @var Botobor_Form $form */
+        $form->getCode());
 	}
-	//-----------------------------------------------------------------------------
 
 	/**
 	 * @link https://github.com/mekras/botobor/issues/2
@@ -155,17 +154,16 @@ class Botobor_Form_Test extends PHPUnit_Framework_TestCase
 		with('hidden', 'botobor_meta_data', '[metadata]')->will($this->returnValue('<meta>'));
 
 		$meta = $this->getMock('Botobor_MetaData', array('getEncoded'));
-		$meta->checks = Botobor::getChecks();
-		$meta->expects($this->once())->method('getEncoded')->will($this->returnValue('[metadata]'));
+        /** @var Botobor_MetaData $meta */
+        $meta->checks = get_botobor_checks();
+        $meta->expects($this->once())->method('getEncoded')->will($this->returnValue('[metadata]'));
 
 		$p_meta = new ReflectionProperty('Botobor_Form', 'meta');
 		$p_meta->setAccessible(true);
 		$p_meta->setValue($form, $meta);
 
 		$form->setCheck('honeypots', false);
-		$this->assertEquals('<form><div style="display: none;"><meta></div></form>', $form->getCode());
+		$this->assertEquals('<form><div style="display: none;"><meta></div></form>',
+            $form->getCode());
 	}
-	//-----------------------------------------------------------------------------
-
-	/* */
 }

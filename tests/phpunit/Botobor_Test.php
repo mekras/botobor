@@ -5,47 +5,43 @@ require_once SRC_ROOT . '/botobor.php';
 class Botobor_Test extends PHPUnit_Framework_TestCase
 {
 	/**
-	 * @covers Botobor::getSecret
-	 * @covers Botobor::setSecret
+	 * @covers Botobor::get
+	 * @covers Botobor::set
 	 */
 	public function test_secrets()
 	{
-		$this->assertEquals(filemtime(SRC_ROOT . '/botobor.php'), Botobor::getSecret());
+		$this->assertEquals(filemtime(SRC_ROOT . '/botobor.php'), Botobor::get('secret'));
 
 		$secret = 'My secret';
-		Botobor::setSecret($secret);
-		$this->assertEquals($secret, Botobor::getSecret());
+		Botobor::set('secret', $secret);
+		$this->assertEquals($secret, Botobor::get('secret'));
 	}
-	//-----------------------------------------------------------------------------
 
 	/**
-	 * @covers Botobor::getDefault
-	 * @covers Botobor::setDefault
+	 * @covers Botobor::get
+	 * @covers Botobor::set
 	 */
-	public function test_defaults()
+	public function test_get_set()
 	{
-		Botobor::setDefault('delay', 10);
-		$this->assertEquals(10, Botobor::getDefault('delay'));
+		Botobor::set('delay', 10);
+		$this->assertEquals(10, Botobor::get('delay'));
 	}
-	//-----------------------------------------------------------------------------
 
-	/**
-	 * @covers Botobor::getChecks
-	 * @covers Botobor::setCheck
-	 */
-	public function test_checks()
-	{
-		$checks = Botobor::getChecks();
-		$this->assertInternalType('array', $checks);
-		$this->assertNotEmpty($checks);
-		reset($checks);
-		$check = key($checks);
-		$state = $checks[$check];
-		Botobor::setCheck($check, !$state);
-		$checks = Botobor::getChecks();
-		$this->assertNotEquals($state, $checks[$check]);
-	}
-	//-----------------------------------------------------------------------------
+    /**
+     * @covers Botobor::set
+     * @expectedException InvalidArgumentException
+     */
+    public function test_set_invalid_option()
+    {
+        Botobor::set('foo', 'bar');
+    }
 
-	/* */
+    /**
+     * @covers Botobor::set
+     * @expectedException InvalidArgumentException
+     */
+    public function test_set_invalid_value()
+    {
+        Botobor::set('delay', 'foo');
+    }
 }

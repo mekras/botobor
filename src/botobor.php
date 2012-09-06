@@ -52,35 +52,25 @@ class Botobor
     const META_FIELD_NAME = 'botobor_meta_data';
 
     /**
-     * Секретная строка для подписывания мета-данных
-     *
-     * @var string
-     */
-    private static $secret = null;
-
-    /**
-     * Проверки
-     *
+     * Настройки по умолчанию
      * @var array
-     * @since 0.2.0
+     * @since 0.4.0
      */
-    private static $checks = array(
-        'referer' => true,
-        'delay' => true,
-        'lifetime' => true,
-        'honeypots' => true,
-    );
-
-    /**
-     * Значения по умолчанию опций защиты форм
-     *
-     * @var array
-     */
-    private static $defaults = array(
+    private static $conf = array(
+        // Секретная строка для подписывания мета-данных
+        'secret' => '',
+        // Проверка REFERER
+        'check.referer' => true,
+        // Проверка задержки
+        'check.delay' => true,
         // Наименьшая задержка в секундах допустимая между созданием и получением формы
         'delay' => 5,
+        // Проверять время жизни
+        'check.lifetime' => true,
         // Наибольшая задержка в минутах допустимая между созданием и получением формы
         'lifetime' => 30,
+        // Использовать приманки
+        'check.honeypots' => true,
         // Имена для приманок
         'honeypots' => array(
             'name', 'mail', 'email'
@@ -88,104 +78,68 @@ class Botobor
     );
 
     /**
-     * Возвращает секретный ключ для подписывания мета-данных
+     * Возвращает значение параметра настроек по умолчанию
      *
-     * Ключ может быть задан при помощи {@link setSecret()}, в противном случае в качестве
-     * ключа будет использовано время последнего изменения файла библиотеки.
+     * Возможные параметры:
      *
-     * @return string
-     *
-     * @see setSecret()
-     * @see signature()
-     */
-    public static function getSecret()
-    {
-        $secret = self::$secret ? self::$secret : filemtime(__FILE__);
-        return $secret;
-    }
-
-    /**
-     * Устанавливает секретный ключ для подписывания мета-данных
-     *
-     * @param string $secret  ключ
-     *
-     * @return void
-     *
-     * @see getSecret()
-     * @see signature()
-     */
-    public static function setSecret($secret)
-    {
-        self::$secret = $secret;
-    }
-
-    /**
-     * Возвращает значение по умолчанию для опции защиты
+     * - secret (string) - секретная строка для подписывания мета-данных
+     * - check.referer (bool) — проверять заголовок REFERER
+     * - check.delay (bool) — проверять минимальное время между показом и отправкой формы
+     * - delay (int) — наименьшая задержка в секундах допустимая между созданием и получением формы
+     * - check.lifetime (bool) — проверять максимальное время между показом и отправкой формы
+     * - lifetime (int) — время жизни формы в минутах (от момента создания)
+     * - check.honeypots (bool) — использовать поля-приманками
+     * - honeypots (string[]) — имена для приманок
      *
      * @param string $option  имя опции
      *
      * @return mixed
      *
-     * @see setDefault()
+     * @see set()
+     * @since 0.4.0
      */
-    public static function getDefault($option)
+    public static function get($option)
     {
-        return isset(self::$defaults[$option]) ? self::$defaults[$option] : null;
+        assert('is_string($option)');
+
+        if ('secret' == $option && '' === self::$conf['secret'])
+        {
+            self::$conf['secret'] = strval(filemtime(__FILE__));
+        }
+        return isset(self::$conf[$option]) ? self::$conf[$option] : null;
     }
 
     /**
-     * Устанавливает значение по умолчанию для опции защиты
+     * Устанавливает значение параметра настроек по умолчанию
      *
      * @param string $option  имя опции
      * @param mixed  $value   новое значение
      *
-     * @return void
-     *
-     * @see getDefault()
-     */
-    public static function setDefault($option, $value)
-    {
-        if (isset(self::$defaults[$option]))
-        {
-            self::$defaults[$option] = $value;
-        }
-    }
-
-    /**
-     * Возвращает список доступных проверок и их состояние (вкл./выкл.)
-     *
-     * @return array  ассоциативный массив, ключи — имена проверок, значения — состояние
-     *
-     * @since 0.2.0
-     */
-    public static function getChecks()
-    {
-        return self::$checks;
-    }
-
-    /**
-     * Включает или отключает проверку
-     *
-     * Проверки на роботов:
-     *
-     * - referer — проверка заголовка REFERER
-     * - delay — проверка минимального времени между показом и отправкой формы
-     * - lifetime — проверка максимального времени между показом и отправкой формы
-     * - honeypots — проверка полями-приманками
-     *
-     * @param string $check  имя проверки
-     * @param bool   $state  новое состояние
+     * @throws InvalidArgumentException
      *
      * @return void
      *
-     * @since 0.2.0
+     * @see get()
+     * @since 0.4.0
      */
-    public static function setCheck($check, $state)
+    public static function set($option, $value)
     {
-        if (array_key_exists($check, self::$checks))
+        if (!array_key_exists($option, self::$conf))
         {
-            self::$checks[$check] = $state;
+            throw new InvalidArgumentException(sprintf('Unknown option "%s"', $option));
         }
+
+        $expected = gettype(self::$conf[$option]);
+        $actual = gettype($value);
+        if ($expected != $actual)
+        {
+            throw new InvalidArgumentException(
+                sprintf('Option "%s" has type "%s", but "%s" given',
+                    $option, $expected, $actual)
+            );
+        }
+
+        self::$conf[$option] = $value;
     }
 }
 
@@ -351,7 +305,7 @@ class Botobor_MetaData
      */
     protected function signature($data)
     {
-        $signature = md5($data . Botobor::getSecret());
+        $signature = md5($data . Botobor::get('secret'));
         return $signature;
     }
 }
@@ -364,18 +318,16 @@ class Botobor_MetaData
  * Основано на {@link http://nedbatchelder.com/text/stopbots.html}
  *
  * Считается, что форма заполнена роботом, если:
- * - либо заголовок REFERER не совпадает с адресом, где была размещена форма;
  * - либо между созданием формы и её отправкой прошло слишком мало времени
  *   (см. опцию {@link Botobor_Form::__construct() delay});
  * - либо между созданием формы и её отправкой прошло слишком много времени
  *   (см. опцию {@link Botobor_Form::__construct() lifetime});
- * - либо заполнено хотя бы одно поле-приманка (см. {@link Botobor_Form::setHoneypot()}).
+ * - либо заполнено хотя бы одно поле-приманка (см. {@link Botobor_Form::setHoneypot()});
+ * - либо заголовок REFERER не совпадает с адресом, где была размещена форма.
  *
  * Любая из проверок может быть отключена.
  *
  * <b>ИСПОЛЬЗОВАНИЕ</b>
- *
- * <b>Простой пример</b>
  *
  * Файл, создающий форму:
  * <code>
@@ -393,43 +345,13 @@ class Botobor_MetaData
  * <code>
  * require 'botobor.php';
  * …
- * if (Botobor_Keeper::isRobot())
+ * if (Botobor_Keeper::get()->isRobot())
  * {
  *     // Форма отправлена роботом, выводим сообщение об ошибке.
  * }
  * </code>
  *
- * <b>Пример с опциями</b>
- *
- * Можно менять поведение Botobor при помощи опций. Например, для форм комментариев имеет смысл
- * увеличить параметр lifetime, т. к. посетители перед комментированием могут долго читать статью.
- * Это можно сделать так:
- *
- * <code>
- * $bform = new Botobor_Form($html);
- * $bform->setLifetime(60); // 60 минут
- * </code>
- *
- * Подробнее об опциях см. {@link setCheck()}, {@link setDelay()}, {@link setLifetime()}.
- *
- * <b>Пример с приманкой</b>
- *
- * Поля-приманки предназначены для отлова роботов-пауков, которые находят формы самостоятельно.
- * Такие роботы, как правило, ищут в форме знакомые поля (например, name) и заполняют их. Ботобор
- * может добавить в форму скрытые от человека (при помощи CSS) поля с такими именами. Человек
- * оставит эти поля пустыми (т. к. просто не увидит), а робот заполнит и тем самым выдаст себя.
- *
- * В этом примере поле «name» будет сделано приманкой. При этом имя настоящего поля «name» будет
- * заменено на случайное значение. Обратное преобразование будет сделано во время вызова
- * метода {@link Botobor_Keeper::handleRequest()} (вызывается автоматически из
- * {@link Botobor_Keeper::isRobot()}).
- *
- * <code>
- * $bform = new Botobor_Form($html);
- * $bform->setHoneypot('name');
- * </code>
- *
- * Подробнее см. {@link Botobor_Keeper::handleRequest()}.
+ * Подробнее в {@link http://mekras.github.com/botobor/ документации}.
  *
  * @package Botobor
  */
@@ -471,11 +393,16 @@ class Botobor_Form
         $this->form = $form;
 
         $this->meta = new Botobor_MetaData();
-        $this->meta->checks = Botobor::getChecks();
+        $this->meta->checks = array(
+            'referer' => Botobor::get('check.referer'),
+            'delay' => Botobor::get('check.delay'),
+            'lifetime' => Botobor::get('check.lifetime'),
+            'honeypots' => Botobor::get('check.honeypots'),
+        );
 
-        $this->setDelay(Botobor::getDefault('delay'));
-        $this->setLifetime(Botobor::getDefault('lifetime'));
-        $this->honeypots = Botobor::getDefault('honeypots');
+        $this->setDelay(Botobor::get('delay'));
+        $this->setLifetime(Botobor::get('lifetime'));
+        $this->honeypots = Botobor::get('honeypots');
 
         $this->meta->timestamp = time();
 

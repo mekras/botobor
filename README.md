@@ -88,7 +88,7 @@ $html = $bform->getCode();
 <?php
 require 'path/to/botobor.php';
 ...
-if (Botobor_Keeper::isRobot())
+if (Botobor_Keeper::get()->isRobot())
 {
     // Форма отправлена роботом, выводим сообщение об ошибке.
 }
@@ -153,7 +153,7 @@ function checkRequest()
              $this->showErrorNotify();
          }
     }
-    elseif (Botobor_Keeper::isRobot())
+    elseif (Botobor_Keeper::get()->isRobot())
     {
         /*
          * Попадание сюда горовит о том, что посетитель не прошёл проверку Ботобором. На случай если

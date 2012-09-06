@@ -19,7 +19,6 @@ class Botobor_MetaData_Test extends PHPUnit_Framework_TestCase
 		$meta->arr['a'] = 'b';
 		$this->assertEquals('b', $meta->arr['a']);
 	}
-	//-----------------------------------------------------------------------------
 
 	/**
 	 * @covers Botobor_MetaData::isValid
@@ -32,7 +31,6 @@ class Botobor_MetaData_Test extends PHPUnit_Framework_TestCase
 		$p_isValid->setValue($meta, true);
 		$this->assertTrue($meta->isValid());
 	}
-	//-----------------------------------------------------------------------------
 
 	/**
 	 * @covers Botobor_MetaData::__construct
@@ -52,7 +50,6 @@ class Botobor_MetaData_Test extends PHPUnit_Framework_TestCase
 		$this->assertEquals('value1', $meta->param1);
 		$this->assertEquals('value2', $meta->param2);
 	}
-	//-----------------------------------------------------------------------------
 
 	/* */
 }
