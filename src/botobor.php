@@ -301,7 +301,6 @@ class Botobor_MetaData
      * @return string  подпись
      *
      * @since 0.3.0
-     * @uses Botobor::getSecret()
      */
     protected function signature($data)
     {
@@ -422,7 +421,7 @@ class Botobor_Form
      * @return void
      *
      * @since 0.2.0
-     * @see Botobor::setCheck() для более подробной информации
+     * @see Botobor::set() для более подробной информации
      */
     public function setCheck($check, $state)
     {
