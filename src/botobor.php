@@ -614,6 +614,14 @@ class Botobor_Keeper
     private $isResubmit = false;
 
     /**
+     * Провалившаяся проверка
+     *
+     * @var null|string
+     * @since 0.4.0
+     */
+    private $failedCheck = null;
+
+    /**
      * Обрабатывает текущий запрос
      *
      * Если в текущем запросе содержатся мета-данные Ботобора, они извлекаются и проверяются.
@@ -644,6 +652,7 @@ class Botobor_Keeper
 
         $this->isHandled = true;
         $this->isRobot = false;
+        $this->failedCheck = null;
 
         /*
          * Если аргументы не переданы, получаем их самостоятельно
@@ -662,6 +671,7 @@ class Botobor_Keeper
 
                 default:
                     $this->isRobot = true;
+                    $this->failedCheck = 'error';
                     return;
             }
         }
@@ -669,6 +679,7 @@ class Botobor_Keeper
         /* Проверяем наличие мета-данных */
         if (!isset($req[Botobor::META_FIELD_NAME]))
         {
+            $this->failedCheck = 'meta';
             $this->isRobot = true;
             return;
         }
@@ -682,6 +693,11 @@ class Botobor_Keeper
             !$this->testHoneypots($meta, $req) ||
             !$this->testReferer($meta) ||
             !$this->testTimings($meta);
+
+        if (!$meta->isValid())
+        {
+            $this->failedCheck = 'meta';
+        }
 
         $this->isResubmit = in_array($meta->uid, $_SESSION['botobor']['handled']);
 
@@ -721,6 +737,25 @@ class Botobor_Keeper
     }
 
     /**
+     * Возвращает имя провалившейся проверки или null
+     *
+     * Имена проверок такие же как используются в методе {@link Botobor::set()}, но без префикса
+     * «check.»: delay, lifetime и т. д.
+     *
+     * Кроме них могут также возвращаться другие значения:
+     *
+     * - meta — мета-данные отсутствуют или искажены
+     * - error — произошла ошибка при анализе запроса
+     *
+     * @return null|string
+     * @since 0.4.0
+     */
+    public function getFailedCheck()
+    {
+        return $this->failedCheck;
+    }
+
+    /**
      * Возвращает экземпляр-одиночку класса {@link Botobor_Keeper}
      *
      * @return Botobor_Keeper
@@ -739,16 +774,20 @@ class Botobor_Keeper
     /**
      * Запрещает создание объектов этого класса другими классами
      */
+    //@codeCoverageIgnoreStart
     private function __construct()
     {
     }
+    //@codeCoverageIgnoreEnd
 
     /**
      * Запрещает клонирование объекта
      */
+    //@codeCoverageIgnoreStart
     private function __clone()
     {
     }
+    //@codeCoverageIgnoreEnd
 
     /**
      * Проверяет поля-приманки
@@ -769,8 +808,12 @@ class Botobor_Keeper
             {
                 if (isset($req[$name]) && $req[$name])
                 {
+                    $this->failedCheck = 'honeypots';
                     $result = false;
-                    // Не прерываем выполнение метода, чтобы восстановить правильные имена для всех параметров
+                    /*
+                     * Не прерываем выполнение метода, чтобы восстановить правильные имена для всех
+                     * параметров
+                     */
                 }
 
                 $req[$name] = @$req[$alias];
@@ -791,10 +834,17 @@ class Botobor_Keeper
      */
     private function testReferer(Botobor_MetaData $meta)
     {
-        return
-            @!$meta->checks['referer'] ||
+        if (@!$meta->checks['referer'] ||
             !$meta->referer ||
-            (isset($_SERVER['HTTP_REFERER']) && $meta->referer == $_SERVER['HTTP_REFERER']);
+            (isset($_SERVER['HTTP_REFERER']) && $meta->referer == $_SERVER['HTTP_REFERER']))
+        {
+            return true;
+        }
+        else
+        {
+            $this->failedCheck = 'referer';
+            return false;
+        }
     }
 
     /**
@@ -814,6 +864,7 @@ class Botobor_Keeper
             (time() - $meta->timestamp < $meta->delay)
         )
         {
+            $this->failedCheck = 'delay';
             return false;
         }
 
@@ -823,6 +874,7 @@ class Botobor_Keeper
             (time() - $meta->timestamp > $meta->lifetime * 60)
         )
         {
+            $this->failedCheck = 'lifetime';
             return false;
         }
 
