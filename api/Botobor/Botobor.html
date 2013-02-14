@@ -27,7 +27,7 @@
 <p class="short-description">Вспомогательный класс</p>
 <p class="description"><p><a href="../Botobor/Botobor_Form.html">Описание и примеры.</a></p></p>
 		<p class="notes">
-			Исходный файл <a class="field" href="_botobor.php.html">/botobor.php</a> (строка <span class="field">45</span>)
+			Исходный файл <a class="field" href="_botobor.php.html">/botobor.php</a> (строка <span class="field">44</span>)
 		</p>
 
 		
@@ -70,41 +70,17 @@
 			<div class="method-summary">
 												<div class="method-definition">
 					<img src="../media/images/StaticMethod.png" alt=" "/>
-											static <span class="method-result">array</span>
-										<a href="#getChecks" title="details" class="method-name">getChecks</a>
-										()
-									</div>
-																<div class="method-definition">
-					<img src="../media/images/StaticMethod.png" alt=" "/>
 											static <span class="method-result">mixed</span>
-										<a href="#getDefault" title="details" class="method-name">getDefault</a>
+										<a href="#get" title="details" class="method-name">get</a>
 											(<span class="var-type">string</span>&nbsp;<span class="var-name">$option</span>)
 									</div>
 																<div class="method-definition">
 					<img src="../media/images/StaticMethod.png" alt=" "/>
-											static <span class="method-result">string</span>
-										<a href="#getSecret" title="details" class="method-name">getSecret</a>
-										()
-									</div>
-																<div class="method-definition">
-					<img src="../media/images/StaticMethod.png" alt=" "/>
 											static <span class="method-result">void</span>
-										<a href="#setCheck" title="details" class="method-name">setCheck</a>
-											(<span class="var-type">string</span>&nbsp;<span class="var-name">$check</span>, <span class="var-type">bool</span>&nbsp;<span class="var-name">$state</span>)
-									</div>
-																<div class="method-definition">
-					<img src="../media/images/StaticMethod.png" alt=" "/>
-											static <span class="method-result">void</span>
-										<a href="#setDefault" title="details" class="method-name">setDefault</a>
+										<a href="#set" title="details" class="method-name">set</a>
 											(<span class="var-type">string</span>&nbsp;<span class="var-name">$option</span>, <span class="var-type">mixed</span>&nbsp;<span class="var-name">$value</span>)
 									</div>
-																<div class="method-definition">
-					<img src="../media/images/StaticMethod.png" alt=" "/>
-											static <span class="method-result">void</span>
-										<a href="#setSecret" title="details" class="method-name">setSecret</a>
-											(<span class="var-type">string</span>&nbsp;<span class="var-name">$secret</span>)
-									</div>
-																																																															</div>
+																															</div>
 		</div>
 	</div>
 
@@ -118,52 +94,25 @@
 					</div>
 		<div class="info-box-body">
 			<a name="method_detail"></a>
-<a name="methodgetChecks" id="getChecks"><!-- --></a>
+<a name="methodget" id="get"><!-- --></a>
 <div class="b-member-info">
 	
 	<div class="method-header">
 		<img src="../media/images/StaticMethod.png" />
-		<span class="method-title">static Botobor::getChecks</span> (line <span class="line-number">166</span>)
-	</div> 
-	
-	<div class="method-signature">
-		<span class="method-result">array</span>
-		<span class="method-name">
-			getChecks
-		</span>
-				()
-			</div>
-	
-		<p class="short-description">Возвращает список доступных проверок и их состояние (вкл/выкл)</p>
-		
-		
-			<h4>Прочее:</h4>
-		<ul class="tags">
-						<li><span class="field">return:</span> ассоциативный массив, ключи — имена проверок, значения — состояние</li>
-						<li><span class="field">since:</span> 0.2.0</li>
-						<li><span class="field">access:</span> public</li>
-					</ul>
-	
-			
-	</div>
-<a name="methodgetDefault" id="getDefault"><!-- --></a>
-<div class="b-member-info">
-	
-	<div class="method-header">
-		<img src="../media/images/StaticMethod.png" />
-		<span class="method-title">static Botobor::getDefault</span> (line <span class="line-number">134</span>)
+		<span class="method-title">static Botobor::get</span> (line <span class="line-number">101</span>)
 	</div> 
 	
 	<div class="method-signature">
 		<span class="method-result">mixed</span>
 		<span class="method-name">
-			getDefault
+			get
 		</span>
 					(<span class="var-type">string</span>&nbsp;<span class="var-name">$option</span>)
 			</div>
 	
-		<p class="short-description">Возвращает значение по умолчанию для опции защиты</p>
-		
+		<p class="short-description">Возвращает значение параметра настроек по умолчанию</p>
+			<p class="description"><p>Возможные параметры:</p><p><ul><li>secret (string) - секретная строка для подписывания мета-данных</li><li>check.referer (bool) — проверять заголовок REFERER</li><li>check.delay (bool) — проверять минимальное время между показом и отправкой формы</li><li>delay (int) — наименьшая задержка в секундах допустимая между созданием и получением формы</li><li>check.lifetime (bool) — проверять максимальное время между показом и отправкой формы</li><li>lifetime (int) — время жизни формы в минутах (от момента создания)</li><li>check.honeypots (bool) — использовать поля-приманками</li><li>honeypots (string[]) — имена для приманок</li></ul></p></p>
+	
 			<h4>Аргументы:</h4>
 		<ul class="parameters">
 					<li>
@@ -173,96 +122,30 @@
 		
 			<h4>Прочее:</h4>
 		<ul class="tags">
-						<li><span class="field">see:</span> <a href="../Botobor/Botobor.html#methodsetDefault">Botobor::setDefault()</a></li>
+						<li><span class="field">see:</span> <a href="../Botobor/Botobor.html#methodset">Botobor::set()</a></li>
+						<li><span class="field">since:</span> 0.4.0</li>
 						<li><span class="field">access:</span> public</li>
 					</ul>
 	
 			
 	</div>
-<a name="methodgetSecret" id="getSecret"><!-- --></a>
+<a name="methodset" id="set"><!-- --></a>
 <div class="b-member-info">
 	
 	<div class="method-header">
 		<img src="../media/images/StaticMethod.png" />
-		<span class="method-title">static Botobor::getSecret</span> (line <span class="line-number">102</span>)
-	</div> 
-	
-	<div class="method-signature">
-		<span class="method-result">string</span>
-		<span class="method-name">
-			getSecret
-		</span>
-				()
-			</div>
-	
-		<p class="short-description">Возвращает секретный ключ для подписывания мета-данных</p>
-			<p class="description"><p>Ключ может быть задан при помощи <a href="../Botobor/Botobor.html#methodsetSecret">setSecret()</a>, в противном случае в качестве  ключа будет использовано время последнего изменения файла библиотеки.</p></p>
-	
-		
-			<h4>Прочее:</h4>
-		<ul class="tags">
-						<li><span class="field">see:</span> <a href="../Botobor/Botobor.html#methodsetSecret">Botobor::setSecret()</a></li>
-						<li><span class="field">see:</span> signature()</li>
-						<li><span class="field">access:</span> public</li>
-						<li><span class="field">usedby:</span> <a href="../Botobor/Botobor_MetaData.html#methodsignature">Botobor_MetaData::signature()</a></li>
-					</ul>
-	
-			
-	</div>
-<a name="methodsetCheck" id="setCheck"><!-- --></a>
-<div class="b-member-info">
-	
-	<div class="method-header">
-		<img src="../media/images/StaticMethod.png" />
-		<span class="method-title">static Botobor::setCheck</span> (line <span class="line-number">184</span>)
+		<span class="method-title">static Botobor::set</span> (line <span class="line-number">125</span>)
 	</div> 
 	
 	<div class="method-signature">
 		<span class="method-result">void</span>
 		<span class="method-name">
-			setCheck
-		</span>
-					(<span class="var-type">string</span>&nbsp;<span class="var-name">$check</span>, <span class="var-type">bool</span>&nbsp;<span class="var-name">$state</span>)
-			</div>
-	
-		<p class="short-description">Включает или отключает проверку</p>
-		
-			<h4>Аргументы:</h4>
-		<ul class="parameters">
-					<li>
-				<span class="var-type">string</span>
-				<span class="var-name">$check</span><span class="var-description">: имя проверки (см. <a href="../Botobor/Botobor.html#methodgetChecks">getChecks()</a>)</span>			</li>
-					<li>
-				<span class="var-type">bool</span>
-				<span class="var-name">$state</span><span class="var-description">: новое состояние</span>			</li>
-				</ul>
-		
-			<h4>Прочее:</h4>
-		<ul class="tags">
-						<li><span class="field">since:</span> 0.2.0</li>
-						<li><span class="field">throws:</span> InvalidArgumentException  при неверном типе любого аргумента</li>
-						<li><span class="field">access:</span> public</li>
-					</ul>
-	
-			
-	</div>
-<a name="methodsetDefault" id="setDefault"><!-- --></a>
-<div class="b-member-info">
-	
-	<div class="method-header">
-		<img src="../media/images/StaticMethod.png" />
-		<span class="method-title">static Botobor::setDefault</span> (line <span class="line-number">150</span>)
-	</div> 
-	
-	<div class="method-signature">
-		<span class="method-result">void</span>
-		<span class="method-name">
-			setDefault
+			set
 		</span>
 					(<span class="var-type">string</span>&nbsp;<span class="var-name">$option</span>, <span class="var-type">mixed</span>&nbsp;<span class="var-name">$value</span>)
 			</div>
 	
-		<p class="short-description">Устанавливает значение по умолчанию для опции защиты</p>
+		<p class="short-description">Устанавливает значение параметра настроек по умолчанию</p>
 		
 			<h4>Аргументы:</h4>
 		<ul class="parameters">
@@ -276,41 +159,9 @@
 		
 			<h4>Прочее:</h4>
 		<ul class="tags">
-						<li><span class="field">see:</span> <a href="../Botobor/Botobor.html#methodgetDefault">Botobor::getDefault()</a></li>
-						<li><span class="field">access:</span> public</li>
-					</ul>
-	
-			
-	</div>
-<a name="methodsetSecret" id="setSecret"><!-- --></a>
-<div class="b-member-info">
-	
-	<div class="method-header">
-		<img src="../media/images/StaticMethod.png" />
-		<span class="method-title">static Botobor::setSecret</span> (line <span class="line-number">119</span>)
-	</div> 
-	
-	<div class="method-signature">
-		<span class="method-result">void</span>
-		<span class="method-name">
-			setSecret
-		</span>
-					(<span class="var-type">string</span>&nbsp;<span class="var-name">$secret</span>)
-			</div>
-	
-		<p class="short-description">Устанавливает секретный ключ для подписывания мета-данных</p>
-		
-			<h4>Аргументы:</h4>
-		<ul class="parameters">
-					<li>
-				<span class="var-type">string</span>
-				<span class="var-name">$secret</span><span class="var-description">: ключ</span>			</li>
-				</ul>
-		
-			<h4>Прочее:</h4>
-		<ul class="tags">
-						<li><span class="field">see:</span> <a href="../Botobor/Botobor.html#methodgetSecret">Botobor::getSecret()</a></li>
-						<li><span class="field">see:</span> signature()</li>
+						<li><span class="field">see:</span> <a href="../Botobor/Botobor.html#methodget">Botobor::get()</a></li>
+						<li><span class="field">since:</span> 0.4.0</li>
+						<li><span class="field">throws:</span> InvalidArgumentException</li>
 						<li><span class="field">access:</span> public</li>
 					</ul>
 	
@@ -338,7 +189,7 @@
 		<span class="const-title">
 			<span class="const-name">META_FIELD_NAME</span>
 			 = <span class="const-default"> 'botobor_meta_data'</span>
-			(line <span class="line-number">53</span>)
+			(line <span class="line-number">52</span>)
 		</span>
 	</div>
 
@@ -354,7 +205,7 @@
 	</div>
 
 	<p class="notes" id="credit">
-		Документация создана Wed, 31 Oct 2012 16:00:57 +0400 при помощи <a href="http://www.phpdoc.org" target="_blank">phpDocumentor 1.4.4</a>
+		Документация создана Thu, 14 Feb 2013 19:32:04 +0400 при помощи <a href="http://www.phpdoc.org" target="_blank">phpDocumentor 1.4.4</a>
 	</p>
 	</div></body>
 </html>

@@ -140,11 +140,19 @@
 	<dl>
 			<dt class="field">
 						<img src="media/images/Method.png" alt="Method" title="Method" />
-			<span class="method-title">getChecks</span>
+			<span class="method-title">get</span>
 					</dt>
 		<dd class="index-item-body">
-			<div class="index-item-details"><a href="Botobor/Botobor.html#methodgetChecks">Botobor::getChecks()</a> in botobor.php</div>
-							<div class="index-item-description">Возвращает список доступных проверок и их состояние (вкл/выкл)</div>
+			<div class="index-item-details"><a href="Botobor/Botobor.html#methodget">Botobor::get()</a> in botobor.php</div>
+							<div class="index-item-description">Возвращает значение параметра настроек по умолчанию</div>
+					</dd>
+			<dt class="field">
+						<img src="media/images/Method.png" alt="Method" title="Method" />
+			<span class="method-title">get</span>
+					</dt>
+		<dd class="index-item-body">
+			<div class="index-item-details"><a href="Botobor/Botobor_Keeper.html#methodget">Botobor_Keeper::get()</a> in botobor.php</div>
+							<div class="index-item-description">Возвращает экземпляр-одиночку класса <a href="Botobor/Botobor_Keeper.html">Botobor_Keeper</a></div>
 					</dd>
 			<dt class="field">
 						<img src="media/images/Method.png" alt="Method" title="Method" />
@@ -156,14 +164,6 @@
 					</dd>
 			<dt class="field">
 						<img src="media/images/Method.png" alt="Method" title="Method" />
-			<span class="method-title">getDefault</span>
-					</dt>
-		<dd class="index-item-body">
-			<div class="index-item-details"><a href="Botobor/Botobor.html#methodgetDefault">Botobor::getDefault()</a> in botobor.php</div>
-							<div class="index-item-description">Возвращает значение по умолчанию для опции защиты</div>
-					</dd>
-			<dt class="field">
-						<img src="media/images/Method.png" alt="Method" title="Method" />
 			<span class="method-title">getEncoded</span>
 					</dt>
 		<dd class="index-item-body">
@@ -172,11 +172,11 @@
 					</dd>
 			<dt class="field">
 						<img src="media/images/Method.png" alt="Method" title="Method" />
-			<span class="method-title">getSecret</span>
+			<span class="method-title">getFailedCheck</span>
 					</dt>
 		<dd class="index-item-body">
-			<div class="index-item-details"><a href="Botobor/Botobor.html#methodgetSecret">Botobor::getSecret()</a> in botobor.php</div>
-							<div class="index-item-description">Возвращает секретный ключ для подписывания мета-данных</div>
+			<div class="index-item-details"><a href="Botobor/Botobor_Keeper.html#methodgetFailedCheck">Botobor_Keeper::getFailedCheck()</a> in botobor.php</div>
+							<div class="index-item-description">Возвращает имя провалившейся проверки или null</div>
 					</dd>
 		</dl>
 	<a name="h"></a>
@@ -220,11 +220,19 @@
 					</dd>
 			<dt class="field">
 						<img src="media/images/Method.png" alt="Method" title="Method" />
-			<span class="method-title">isHuman</span>
+			<span class="method-title">isResubmit</span>
 					</dt>
 		<dd class="index-item-body">
-			<div class="index-item-details"><a href="Botobor/Botobor_Keeper.html#methodisHuman">Botobor_Keeper::isHuman()</a> in botobor.php</div>
-							<div class="index-item-description">Возвращает true если форму отправил человек</div>
+			<div class="index-item-details"><a href="Botobor/Botobor_Keeper.html#methodisResubmit">Botobor_Keeper::isResubmit()</a> in botobor.php</div>
+							<div class="index-item-description">Возвращает true если форма была отправлена повторно</div>
+					</dd>
+			<dt class="field">
+						<img src="media/images/Method.png" alt="Method" title="Method" />
+			<span class="method-title">isRobot</span>
+					</dt>
+		<dd class="index-item-body">
+			<div class="index-item-details"><a href="Botobor/Botobor_Keeper.html#methodisRobot">Botobor_Keeper::isRobot()</a> in botobor.php</div>
+							<div class="index-item-description">Возвращает true если форму отправил робот</div>
 					</dd>
 			<dt class="field">
 						<img src="media/images/Method.png" alt="Method" title="Method" />
@@ -268,11 +276,11 @@
 	<dl>
 			<dt class="field">
 						<img src="media/images/Method.png" alt="Method" title="Method" />
-			<span class="method-title">setCheck</span>
+			<span class="method-title">set</span>
 					</dt>
 		<dd class="index-item-body">
-			<div class="index-item-details"><a href="Botobor/Botobor.html#methodsetCheck">Botobor::setCheck()</a> in botobor.php</div>
-							<div class="index-item-description">Включает или отключает проверку</div>
+			<div class="index-item-details"><a href="Botobor/Botobor.html#methodset">Botobor::set()</a> in botobor.php</div>
+							<div class="index-item-description">Устанавливает значение параметра настроек по умолчанию</div>
 					</dd>
 			<dt class="field">
 						<img src="media/images/Method.png" alt="Method" title="Method" />
@@ -281,14 +289,6 @@
 		<dd class="index-item-body">
 			<div class="index-item-details"><a href="Botobor/Botobor_Form.html#methodsetCheck">Botobor_Form::setCheck()</a> in botobor.php</div>
 							<div class="index-item-description">Включает или отключает проверку</div>
-					</dd>
-			<dt class="field">
-						<img src="media/images/Method.png" alt="Method" title="Method" />
-			<span class="method-title">setDefault</span>
-					</dt>
-		<dd class="index-item-body">
-			<div class="index-item-details"><a href="Botobor/Botobor.html#methodsetDefault">Botobor::setDefault()</a> in botobor.php</div>
-							<div class="index-item-description">Устанавливает значение по умолчанию для опции защиты</div>
 					</dd>
 			<dt class="field">
 						<img src="media/images/Method.png" alt="Method" title="Method" />
@@ -305,14 +305,6 @@
 		<dd class="index-item-body">
 			<div class="index-item-details"><a href="Botobor/Botobor_Form.html#methodsetLifetime">Botobor_Form::setLifetime()</a> in botobor.php</div>
 							<div class="index-item-description">Устанавливает наибольшую допустимую задержку перед отправкой формы</div>
-					</dd>
-			<dt class="field">
-						<img src="media/images/Method.png" alt="Method" title="Method" />
-			<span class="method-title">setSecret</span>
-					</dt>
-		<dd class="index-item-body">
-			<div class="index-item-details"><a href="Botobor/Botobor.html#methodsetSecret">Botobor::setSecret()</a> in botobor.php</div>
-							<div class="index-item-description">Устанавливает секретный ключ для подписывания мета-данных</div>
 					</dd>
 			<dt class="field">
 						<img src="media/images/Method.png" alt="Method" title="Method" />
