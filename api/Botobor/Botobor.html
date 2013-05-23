@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<!-- template designed by Marco Von Ballmoos -->
+		<meta http-equiv='Content-Type' content='text/html; charset=utf-8'/>
+		<title>Docs For Class Botobor</title>
+		<link rel="stylesheet" href="../media/stylesheet.css" />
+	</head>
+	<body>
+		<div class="page-body">
+<h2 class="class-name"><img src="../media/images/Class_logo.png"
+														alt=" Class"
+														title=" Class"
+														style="vertical-align: middle"> Botobor</h2>
+
+<a name="sec-description"></a>
+<div class="info-box">
+	<div class="info-box-title">Описание</div>
+	<div class="nav-bar">
+					<span class="disabled">Описание</span> |
+															<a href="#sec-method-summary">Методы</a> (<a href="#sec-methods">подробности</a>)
+														<a href="#sec-const-summary">Константы</a> (<a href="#sec-consts">подробности</a>)
+						</div>
+	<div class="info-box-body">
+        		<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Вспомогательный класс</p>
+<p class="description"><p><a href="../Botobor/Botobor_Form.html">Описание и примеры.</a></p></p>
+		<p class="notes">
+			Исходный файл <a class="field" href="_botobor.php.html">/botobor.php</a> (строка <span class="field">44</span>)
+		</p>
+
+		
+		<pre></pre>
+
+			</div>
+</div>
+
+
+	<a name="sec-const-summary"></a>
+	<div class="info-box">
+		<div class="info-box-title">Обзор констант класса</span></div>
+		<div class="nav-bar">
+			<a href="#sec-description">Описание</a> |
+						<span class="disabled">Константы</span> (<a href="#sec-consts">подробности</a>)
+										|
+									<a href="#sec-method-summary">Методы</a> (<a href="#sec-methods">подробности</a>)
+									</div>
+		<div class="info-box-body">
+			<div class="const-summary">
+								<div class="const-title">
+					<img src="../media/images/Constant.png" alt=" " />
+					<a href="#META_FIELD_NAME" title="details" class="const-name">META_FIELD_NAME</a> = 					<span class="var-type"> 'botobor_meta_data'</span>
+
+				</div>
+							</div>
+		</div>
+	</div>
+
+
+	<a name="sec-method-summary"></a>
+	<div class="info-box">
+		<div class="info-box-title">Обзор методов</span></div>
+		<div class="nav-bar">
+			<a href="#sec-description">Описание</a> |
+															<a href="#sec-const-summary">Константы</a> (<a href="#sec-consts">подробности</a>)
+													<span class="disabled">Методы</span> (<a href="#sec-methods">подробности</a>)
+		</div>
+		<div class="info-box-body">
+			<div class="method-summary">
+												<div class="method-definition">
+					<img src="../media/images/StaticMethod.png" alt=" "/>
+											static <span class="method-result">mixed</span>
+										<a href="#get" title="details" class="method-name">get</a>
+											(<span class="var-type">string</span>&nbsp;<span class="var-name">$option</span>)
+									</div>
+																<div class="method-definition">
+					<img src="../media/images/StaticMethod.png" alt=" "/>
+											static <span class="method-result">void</span>
+										<a href="#set" title="details" class="method-name">set</a>
+											(<span class="var-type">string</span>&nbsp;<span class="var-name">$option</span>, <span class="var-type">mixed</span>&nbsp;<span class="var-name">$value</span>)
+									</div>
+																															</div>
+		</div>
+	</div>
+
+
+	<a name="sec-methods"></a>
+	<div class="info-box">
+		<div class="info-box-title">Методы</div>
+		<div class="nav-bar">
+			<a href="#sec-description">Описание</a> |
+													<a href="#sec-method-summary">Методы</a> (<span class="disabled">подробности</span>)
+					</div>
+		<div class="info-box-body">
+			<a name="method_detail"></a>
+<a name="methodget" id="get"><!-- --></a>
+<div class="b-member-info">
+	
+	<div class="method-header">
+		<img src="../media/images/StaticMethod.png" />
+		<span class="method-title">static Botobor::get</span> (line <span class="line-number">101</span>)
+	</div> 
+	
+	<div class="method-signature">
+		<span class="method-result">mixed</span>
+		<span class="method-name">
+			get
+		</span>
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$option</span>)
+			</div>
+	
+		<p class="short-description">Возвращает значение параметра настроек по умолчанию</p>
+			<p class="description"><p>Возможные параметры:</p><p><ul><li>secret (string) - секретная строка для подписывания мета-данных</li><li>check.referer (bool) — проверять заголовок REFERER</li><li>check.delay (bool) — проверять минимальное время между показом и отправкой формы</li><li>delay (int) — наименьшая задержка в секундах допустимая между созданием и получением формы</li><li>check.lifetime (bool) — проверять максимальное время между показом и отправкой формы</li><li>lifetime (int) — время жизни формы в минутах (от момента создания)</li><li>check.honeypots (bool) — использовать поля-приманками</li><li>honeypots (string[]) — имена для приманок</li></ul></p></p>
+	
+			<h4>Аргументы:</h4>
+		<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$option</span><span class="var-description">: имя опции</span>			</li>
+				</ul>
+		
+			<h4>Прочее:</h4>
+		<ul class="tags">
+						<li><span class="field">see:</span> <a href="../Botobor/Botobor.html#methodset">Botobor::set()</a></li>
+						<li><span class="field">since:</span> 0.4.0</li>
+						<li><span class="field">access:</span> public</li>
+					</ul>
+	
+			
+	</div>
+<a name="methodset" id="set"><!-- --></a>
+<div class="b-member-info">
+	
+	<div class="method-header">
+		<img src="../media/images/StaticMethod.png" />
+		<span class="method-title">static Botobor::set</span> (line <span class="line-number">125</span>)
+	</div> 
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			set
+		</span>
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$option</span>, <span class="var-type">mixed</span>&nbsp;<span class="var-name">$value</span>)
+			</div>
+	
+		<p class="short-description">Устанавливает значение параметра настроек по умолчанию</p>
+		
+			<h4>Аргументы:</h4>
+		<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$option</span><span class="var-description">: имя опции</span>			</li>
+					<li>
+				<span class="var-type">mixed</span>
+				<span class="var-name">$value</span><span class="var-description">: новое значение</span>			</li>
+				</ul>
+		
+			<h4>Прочее:</h4>
+		<ul class="tags">
+						<li><span class="field">see:</span> <a href="../Botobor/Botobor.html#methodget">Botobor::get()</a></li>
+						<li><span class="field">since:</span> 0.4.0</li>
+						<li><span class="field">throws:</span> InvalidArgumentException</li>
+						<li><span class="field">access:</span> public</li>
+					</ul>
+	
+			
+	</div>
+					</div>
+	</div>
+
+	<a name="sec-consts"></a>
+	<div class="info-box">
+		<div class="info-box-title">Константы класса</div>
+		<div class="nav-bar">
+			<a href="#sec-description">Описание</a> |
+										<a href="#sec-var-summary">Константы</a> (<span class="disabled">подробности</span>)
+			
+										|
+									<a href="#sec-method-summary">Методы</a> (<a href="#sec-methods">подробности</a>)
+									</div>
+		<div class="info-box-body">
+			<a name="constMETA_FIELD_NAME" id="META_FIELD_NAME"><!-- --></A>
+<div class="evenrow">
+
+	<div class="const-header">
+		<img src="../media/images/Variable.png" />
+		<span class="const-title">
+			<span class="const-name">META_FIELD_NAME</span>
+			 = <span class="const-default"> 'botobor_meta_data'</span>
+			(line <span class="line-number">52</span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Имя поля для мета-данных</p>
+	<ul class="tags">
+				<li><span class="field">since:</span> 0.1.0</li>
+			</ul>
+	
+	
+</div>
+					</div>
+	</div>
+
+	<p class="notes" id="credit">
+		Документация создана Thu, 23 May 2013 16:47:31 +0400 при помощи <a href="http://www.phpdoc.org" target="_blank">phpDocumentor 1.4.4</a>
+	</p>
+	</div></body>
+</html>

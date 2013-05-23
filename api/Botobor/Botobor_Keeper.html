@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<!-- template designed by Marco Von Ballmoos -->
+		<meta http-equiv='Content-Type' content='text/html; charset=utf-8'/>
+		<title>Docs For Class Botobor_Keeper</title>
+		<link rel="stylesheet" href="../media/stylesheet.css" />
+	</head>
+	<body>
+		<div class="page-body">
+<h2 class="class-name"><img src="../media/images/Class_logo.png"
+														alt=" Class"
+														title=" Class"
+														style="vertical-align: middle"> Botobor_Keeper</h2>
+
+<a name="sec-description"></a>
+<div class="info-box">
+	<div class="info-box-title">Описание</div>
+	<div class="nav-bar">
+					<span class="disabled">Описание</span> |
+															<a href="#sec-method-summary">Методы</a> (<a href="#sec-methods">подробности</a>)
+								</div>
+	<div class="info-box-body">
+        		<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Класс проверки принятой формы</p>
+<p class="description"><p>Проверяет форму, принятую в обрабатываемом запросе. При этом проводится обратная замена  полей-приманок на исходные поля формы.</p></p>
+	<ul class="tags">
+				<li><span class="field">see:</span> isHuman()</li>
+				<li><span class="field">link:</span> <a href="../Botobor/_botobor.php.html">botobor.php</a></li>
+			</ul>
+		<p class="notes">
+			Исходный файл <a class="field" href="_botobor.php.html">/botobor.php</a> (строка <span class="field">583</span>)
+		</p>
+
+		
+		<pre></pre>
+
+			</div>
+</div>
+
+
+
+
+	<a name="sec-method-summary"></a>
+	<div class="info-box">
+		<div class="info-box-title">Обзор методов</span></div>
+		<div class="nav-bar">
+			<a href="#sec-description">Описание</a> |
+												<span class="disabled">Методы</span> (<a href="#sec-methods">подробности</a>)
+		</div>
+		<div class="info-box-body">
+			<div class="method-summary">
+												<div class="method-definition">
+					<img src="../media/images/StaticMethod.png" alt=" "/>
+											static <span class="method-result"><a href="../Botobor/Botobor_Keeper.html">Botobor_Keeper</a></span>
+										<a href="#get" title="details" class="method-name">get</a>
+										()
+									</div>
+																																																												<div class="method-definition">
+					<img src="../media/images/Method.png" alt=" "/>
+											<span class="method-result">null|string</span>
+										<a href="#getFailedCheck" title="details" class="method-name">getFailedCheck</a>
+										()
+									</div>
+																<div class="method-definition">
+					<img src="../media/images/Method.png" alt=" "/>
+											<span class="method-result">void</span>
+										<a href="#handleRequest" title="details" class="method-name">handleRequest</a>
+											([<span class="var-type">array</span>&nbsp;<span class="var-name">&$req</span> = <span class="var-default">null</span>])
+									</div>
+																<div class="method-definition">
+					<img src="../media/images/Method.png" alt=" "/>
+											<span class="method-result">bool</span>
+										<a href="#isResubmit" title="details" class="method-name">isResubmit</a>
+										()
+									</div>
+																<div class="method-definition">
+					<img src="../media/images/Method.png" alt=" "/>
+											<span class="method-result">bool</span>
+										<a href="#isRobot" title="details" class="method-name">isRobot</a>
+										()
+									</div>
+											</div>
+		</div>
+	</div>
+
+
+	<a name="sec-methods"></a>
+	<div class="info-box">
+		<div class="info-box-title">Методы</div>
+		<div class="nav-bar">
+			<a href="#sec-description">Описание</a> |
+													<a href="#sec-method-summary">Методы</a> (<span class="disabled">подробности</span>)
+					</div>
+		<div class="info-box-body">
+			<a name="method_detail"></a>
+<a name="methodget" id="get"><!-- --></a>
+<div class="b-member-info">
+	
+	<div class="method-header">
+		<img src="../media/images/StaticMethod.png" />
+		<span class="method-title">static Botobor_Keeper::get</span> (line <span class="line-number">765</span>)
+	</div> 
+	
+	<div class="method-signature">
+		<span class="method-result"><a href="../Botobor/Botobor_Keeper.html">Botobor_Keeper</a></span>
+		<span class="method-name">
+			get
+		</span>
+				()
+			</div>
+	
+		<p class="short-description">Возвращает экземпляр-одиночку класса <a href="../Botobor/Botobor_Keeper.html">Botobor_Keeper</a></p>
+		
+		
+			<h4>Прочее:</h4>
+		<ul class="tags">
+						<li><span class="field">since:</span> 0.4.0</li>
+						<li><span class="field">access:</span> public</li>
+					</ul>
+	
+			
+	</div>
+<a name="methodgetFailedCheck" id="getFailedCheck"><!-- --></a>
+<div class="b-member-info">
+	
+	<div class="method-header">
+		<img src="../media/images/Method.png" />
+		<span class="method-title">Botobor_Keeper::getFailedCheck</span> (line <span class="line-number">753</span>)
+	</div> 
+	
+	<div class="method-signature">
+		<span class="method-result">null|string</span>
+		<span class="method-name">
+			getFailedCheck
+		</span>
+				()
+			</div>
+	
+		<p class="short-description">Возвращает имя провалившейся проверки или null</p>
+			<p class="description"><p>Имена проверок такие же как используются в методе <a href="../Botobor/Botobor.html#methodset">Botobor::set()</a>, но без префикса  «check.»: delay, lifetime и т. д.</p><p>Кроме них могут также возвращаться другие значения:</p><p><ul><li>meta — мета-данные отсутствуют или искажены</li><li>error — произошла ошибка при анализе запроса</li></ul></p></p>
+	
+	
+			<h4>Прочее:</h4>
+		<ul class="tags">
+						<li><span class="field">since:</span> 0.4.0</li>
+						<li><span class="field">access:</span> public</li>
+					</ul>
+		
+			
+	</div>
+<a name="methodhandleRequest" id="handleRequest"><!-- --></a>
+<div class="b-member-info">
+	
+	<div class="method-header">
+		<img src="../media/images/Method.png" />
+		<span class="method-title">Botobor_Keeper::handleRequest</span> (line <span class="line-number">646</span>)
+	</div> 
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			handleRequest
+		</span>
+					([<span class="var-type">array</span>&nbsp;<span class="var-name">&$req</span> = <span class="var-default">null</span>])
+			</div>
+	
+		<p class="short-description">Обрабатывает текущий запрос</p>
+			<p class="description"><p>Если в текущем запросе содержатся мета-данные Ботобора, они извлекаются и проверяются.  Проводится обратная замена полей-приманок на исходные поля формы.</p><p>Этот метод вызывается автоматически из <a href="../Botobor/Botobor_Keeper.html#methodisRobot">isRobot()</a>. Но разработчики могут вызывать его  самостоятельно, если их приложение получает аргументы запроса не напрямую из $_GET или $_POST,  а через посредничество другого класса, который извлекает аргументы до обращения к  <a href="../Botobor/Botobor_Keeper.html#methodisRobot">isRobot()</a>. В этом случае надо вызвать <a href="../Botobor/Botobor_Keeper.html#methodhandleRequest">handleRequest()</a> до создания  класса-посредника.</p><p>Другой способ, если значения извлечённые из $_GET/$_POST хранятся классом-посредником в  массиве — передать этот массив в качестве аргумента $req при вызове метода. В этом случае  будет обработан этот массив, а не $_GET/$_POST.</p></p>
+	
+			<h4>Аргументы:</h4>
+		<ul class="parameters">
+					<li>
+				<span class="var-type">array</span>
+				<span class="var-name">&$req</span><span class="var-description">: аргументы запроса</span>			</li>
+				</ul>
+	
+			<h4>Прочее:</h4>
+		<ul class="tags">
+						<li><span class="field">since:</span> 0.1.0</li>
+						<li><span class="field">access:</span> public</li>
+					</ul>
+		
+			
+	</div>
+<a name="methodisResubmit" id="isResubmit"><!-- --></a>
+<div class="b-member-info">
+	
+	<div class="method-header">
+		<img src="../media/images/Method.png" />
+		<span class="method-title">Botobor_Keeper::isResubmit</span> (line <span class="line-number">730</span>)
+	</div> 
+	
+	<div class="method-signature">
+		<span class="method-result">bool</span>
+		<span class="method-name">
+			isResubmit
+		</span>
+				()
+			</div>
+	
+		<p class="short-description">Возвращает true если форма была отправлена повторно</p>
+		
+	
+			<h4>Прочее:</h4>
+		<ul class="tags">
+						<li><span class="field">since:</span> 0.3.1</li>
+						<li><span class="field">access:</span> public</li>
+					</ul>
+		
+			
+	</div>
+<a name="methodisRobot" id="isRobot"><!-- --></a>
+<div class="b-member-info">
+	
+	<div class="method-header">
+		<img src="../media/images/Method.png" />
+		<span class="method-title">Botobor_Keeper::isRobot</span> (line <span class="line-number">714</span>)
+	</div> 
+	
+	<div class="method-signature">
+		<span class="method-result">bool</span>
+		<span class="method-name">
+			isRobot
+		</span>
+				()
+			</div>
+	
+		<p class="short-description">Возвращает true если форму отправил робот</p>
+		
+	
+			<h4>Прочее:</h4>
+		<ul class="tags">
+						<li><span class="field">since:</span> 0.4.0</li>
+						<li><span class="field">access:</span> public</li>
+					</ul>
+		
+			
+	</div>
+					</div>
+	</div>
+
+
+	<p class="notes" id="credit">
+		Документация создана Thu, 23 May 2013 16:47:31 +0400 при помощи <a href="http://www.phpdoc.org" target="_blank">phpDocumentor 1.4.4</a>
+	</p>
+	</div></body>
+</html>

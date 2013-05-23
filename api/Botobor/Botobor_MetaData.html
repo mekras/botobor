@@ -1,0 +1,349 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<!-- template designed by Marco Von Ballmoos -->
+		<meta http-equiv='Content-Type' content='text/html; charset=utf-8'/>
+		<title>Docs For Class Botobor_MetaData</title>
+		<link rel="stylesheet" href="../media/stylesheet.css" />
+	</head>
+	<body>
+		<div class="page-body">
+<h2 class="class-name"><img src="../media/images/Class_logo.png"
+														alt=" Class"
+														title=" Class"
+														style="vertical-align: middle"> Botobor_MetaData</h2>
+
+<a name="sec-description"></a>
+<div class="info-box">
+	<div class="info-box-title">Описание</div>
+	<div class="nav-bar">
+					<span class="disabled">Описание</span> |
+															<a href="#sec-method-summary">Методы</a> (<a href="#sec-methods">подробности</a>)
+								</div>
+	<div class="info-box-body">
+        		<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Мета-данные формы</p>
+	<ul class="tags">
+				<li><span class="field">property:</span> array $aliases: псевдонимы полей</li>
+				<li><span class="field">property:</span> array $checks: список проверок</li>
+				<li><span class="field">property:</span> int $delay: задержка между созданием и отправкой</li>
+				<li><span class="field">property:</span> int $lifetime: время жизни формы</li>
+				<li><span class="field">property:</span> string $referer: URL формы</li>
+				<li><span class="field">property:</span> int $timestamp: время создания формы</li>
+				<li><span class="field">property:</span> string $uid: уникальный идентификатор</li>
+				<li><span class="field">since:</span> 0.1.0</li>
+			</ul>
+		<p class="notes">
+			Исходный файл <a class="field" href="_botobor.php.html">/botobor.php</a> (строка <span class="field">161</span>)
+		</p>
+
+		
+		<pre></pre>
+
+			</div>
+</div>
+
+
+
+
+	<a name="sec-method-summary"></a>
+	<div class="info-box">
+		<div class="info-box-title">Обзор методов</span></div>
+		<div class="nav-bar">
+			<a href="#sec-description">Описание</a> |
+												<span class="disabled">Методы</span> (<a href="#sec-methods">подробности</a>)
+		</div>
+		<div class="info-box-body">
+			<div class="method-summary">
+																																																																								<div class="method-definition">
+					<img src="../media/images/Constructor.png" alt=" "/>
+											<span class="method-result">Botobor_MetaData</span>
+										<a href="#__construct" title="details" class="method-name">__construct</a>
+											([<span class="var-type">string</span>&nbsp;<span class="var-name">$encodedData</span> = <span class="var-default">null</span>])
+									</div>
+																<div class="method-definition">
+					<img src="../media/images/Method.png" alt=" "/>
+											<span class="method-result">string</span>
+										<a href="#getEncoded" title="details" class="method-name">getEncoded</a>
+										()
+									</div>
+																<div class="method-definition">
+					<img src="../media/images/Method.png" alt=" "/>
+											<span class="method-result">void</span>
+										<a href="#import" title="details" class="method-name">import</a>
+											(<span class="var-type">string</span>&nbsp;<span class="var-name">$encoded</span>)
+									</div>
+																<div class="method-definition">
+					<img src="../media/images/Method.png" alt=" "/>
+											<span class="method-result">bool</span>
+										<a href="#isValid" title="details" class="method-name">isValid</a>
+										()
+									</div>
+																<div class="method-definition">
+					<img src="../media/images/Method.png" alt=" "/>
+											<span class="method-result">string</span>
+										<a href="#signature" title="details" class="method-name">signature</a>
+											(<span class="var-type">string</span>&nbsp;<span class="var-name">$data</span>)
+									</div>
+																<div class="method-definition">
+					<img src="../media/images/Method.png" alt=" "/>
+											<span class="method-result">mixed</span>
+										<a href="#__get" title="details" class="method-name">__get</a>
+											(<span class="var-type">string</span>&nbsp;<span class="var-name">$key</span>)
+									</div>
+																<div class="method-definition">
+					<img src="../media/images/Method.png" alt=" "/>
+											<span class="method-result">void</span>
+										<a href="#__set" title="details" class="method-name">__set</a>
+											(<span class="var-type">string</span>&nbsp;<span class="var-name">$key</span>, <span class="var-type">mixed</span>&nbsp;<span class="var-name">$value</span>)
+									</div>
+											</div>
+		</div>
+	</div>
+
+
+	<a name="sec-methods"></a>
+	<div class="info-box">
+		<div class="info-box-title">Методы</div>
+		<div class="nav-bar">
+			<a href="#sec-description">Описание</a> |
+													<a href="#sec-method-summary">Методы</a> (<span class="disabled">подробности</span>)
+					</div>
+		<div class="info-box-body">
+			<a name="method_detail"></a>
+<a name="method__construct" id="__construct"><!-- --></a>
+<div class="b-member-info">
+	
+	<div class="method-header">
+		<img src="../media/images/Constructor.png" />
+		<span class="method-title">Constructor Botobor_MetaData::__construct</span> (line <span class="line-number">189</span>)
+	</div> 
+	
+	<div class="method-signature">
+		<span class="method-result">Botobor_MetaData</span>
+		<span class="method-name">
+			__construct
+		</span>
+					([<span class="var-type">string</span>&nbsp;<span class="var-name">$encodedData</span> = <span class="var-default">null</span>])
+			</div>
+	
+		<p class="short-description">Создаёт новый контейнер мета-данных</p>
+			<p class="description"><p>Аргумент $encodedData, если передан, должен содержать закодированные, подписанные мета-данные  в виде строки, которые надо импортировать.</p></p>
+	
+			<h4>Аргументы:</h4>
+		<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$encodedData</span><span class="var-description">: закодированные подписанные данные</span>			</li>
+				</ul>
+	
+			<h4>Прочее:</h4>
+		<ul class="tags">
+						<li><span class="field">since:</span> 0.3.0</li>
+						<li><span class="field">access:</span> public</li>
+					</ul>
+		
+			
+	</div>
+<a name="methodgetEncoded" id="getEncoded"><!-- --></a>
+<div class="b-member-info">
+	
+	<div class="method-header">
+		<img src="../media/images/Method.png" />
+		<span class="method-title">Botobor_MetaData::getEncoded</span> (line <span class="line-number">242</span>)
+	</div> 
+	
+	<div class="method-signature">
+		<span class="method-result">string</span>
+		<span class="method-name">
+			getEncoded
+		</span>
+				()
+			</div>
+	
+		<p class="short-description">Возвращает закодированные и подписанные мета-данные</p>
+		
+	
+			<h4>Прочее:</h4>
+		<ul class="tags">
+						<li><span class="field">return:</span> закодированные данные</li>
+						<li><span class="field">since:</span> 0.3.0</li>
+						<li><span class="field">access:</span> public</li>
+					</ul>
+		
+			
+	</div>
+<a name="methodimport" id="import"><!-- --></a>
+<div class="b-member-info">
+	
+	<div class="method-header">
+		<img src="../media/images/Method.png" />
+		<span class="method-title">Botobor_MetaData::import</span> (line <span class="line-number">263</span>)
+	</div> 
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			import
+		</span>
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$encoded</span>)
+			</div>
+	
+		<p class="short-description">Декодирует и импортирует мета-данные</p>
+		
+			<h4>Аргументы:</h4>
+		<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$encoded</span><span class="var-description">: закодированные данные</span>			</li>
+				</ul>
+	
+			<h4>Прочее:</h4>
+		<ul class="tags">
+						<li><span class="field">since:</span> 0.3.0</li>
+						<li><span class="field">access:</span> public</li>
+					</ul>
+		
+			
+	</div>
+<a name="methodisValid" id="isValid"><!-- --></a>
+<div class="b-member-info">
+	
+	<div class="method-header">
+		<img src="../media/images/Method.png" />
+		<span class="method-title">Botobor_MetaData::isValid</span> (line <span class="line-number">291</span>)
+	</div> 
+	
+	<div class="method-signature">
+		<span class="method-result">bool</span>
+		<span class="method-name">
+			isValid
+		</span>
+				()
+			</div>
+	
+		<p class="short-description">Возвращает true если данные достоверны</p>
+		
+	
+			<h4>Прочее:</h4>
+		<ul class="tags">
+						<li><span class="field">see:</span> <a href="../Botobor/Botobor_MetaData.html#methodimport">Botobor_MetaData::import()</a></li>
+						<li><span class="field">since:</span> 0.1.0</li>
+						<li><span class="field">access:</span> public</li>
+					</ul>
+		
+			
+	</div>
+<a name="methodsignature" id="signature"><!-- --></a>
+<div class="b-member-info">
+	
+	<div class="method-header">
+		<img src="../media/images/Method.png" />
+		<span class="method-title">Botobor_MetaData::signature</span> (line <span class="line-number">305</span>)
+	</div> 
+	
+	<div class="method-signature">
+		<span class="method-result">string</span>
+		<span class="method-name">
+			signature
+		</span>
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$data</span>)
+			</div>
+	
+		<p class="short-description">Возвращает подпись для указанных данных</p>
+		
+			<h4>Аргументы:</h4>
+		<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$data</span><span class="var-description">: подписываемые данные</span>			</li>
+				</ul>
+	
+			<h4>Прочее:</h4>
+		<ul class="tags">
+						<li><span class="field">return:</span> подпись</li>
+						<li><span class="field">since:</span> 0.3.0</li>
+						<li><span class="field">access:</span> protected</li>
+					</ul>
+		
+			
+	</div>
+<a name="method__get" id="__get"><!-- --></a>
+<div class="b-member-info">
+	
+	<div class="method-header">
+		<img src="../media/images/Method.png" />
+		<span class="method-title">Botobor_MetaData::__get</span> (line <span class="line-number">211</span>)
+	</div> 
+	
+	<div class="method-signature">
+		<span class="method-result">mixed</span>
+		<span class="method-name">
+			__get
+		</span>
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$key</span>)
+			</div>
+	
+		<p class="short-description">Возвращает элемент мета-данных</p>
+		
+			<h4>Аргументы:</h4>
+		<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$key</span>			</li>
+				</ul>
+	
+			<h4>Прочее:</h4>
+		<ul class="tags">
+						<li><span class="field">since:</span> 0.1.0</li>
+						<li><span class="field">access:</span> public</li>
+					</ul>
+		
+			
+	</div>
+<a name="method__set" id="__set"><!-- --></a>
+<div class="b-member-info">
+	
+	<div class="method-header">
+		<img src="../media/images/Method.png" />
+		<span class="method-title">Botobor_MetaData::__set</span> (line <span class="line-number">226</span>)
+	</div> 
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			__set
+		</span>
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$key</span>, <span class="var-type">mixed</span>&nbsp;<span class="var-name">$value</span>)
+			</div>
+	
+		<p class="short-description">Устанавливает элемент мета-данных</p>
+		
+			<h4>Аргументы:</h4>
+		<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$key</span>			</li>
+					<li>
+				<span class="var-type">mixed</span>
+				<span class="var-name">$value</span>			</li>
+				</ul>
+	
+			<h4>Прочее:</h4>
+		<ul class="tags">
+						<li><span class="field">since:</span> 0.1.0</li>
+						<li><span class="field">access:</span> public</li>
+					</ul>
+		
+			
+	</div>
+					</div>
+	</div>
+
+
+	<p class="notes" id="credit">
+		Документация создана Thu, 23 May 2013 16:47:31 +0400 при помощи <a href="http://www.phpdoc.org" target="_blank">phpDocumentor 1.4.4</a>
+	</p>
+	</div></body>
+</html>
