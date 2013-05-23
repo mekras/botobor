@@ -26,9 +26,9 @@
  *
  * @version 0.4.0
  *
- * @copyright 2008-2012, Михаил Красильников, <mihalych@vsepofigu.ru>
+ * @copyright 2008-2012, Михаил Красильников, <m.krasilinkov@yandex.ru>
  * @license http://www.apache.org/licenses/LICENSE-2.0.html  Apache License, Version 2.0
- * @author Михаил Красильников, <mihalych@vsepofigu.ru>
+ * @author Михаил Красильников, <m.krasilinkov@yandex.ru>
  *
  * @package Botobor
  */
