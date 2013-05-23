@@ -2,77 +2,68 @@
 
 <project name="botobor" default="tests" basedir="./">
 
-	<property file="build.properties" />
+    <property file="build.properties" />
 
-	<!-- ====================================================================================== -->
+    <!-- ====================================================================================== -->
 
-	<target name="tests" description="Unit tests">
+    <target name="tests" description="Unit tests">
 
-		<phplint>
-			<fileset dir="src">
-				<include name="**" />
-			</fileset>
-		</phplint>
+        <phplint>
+            <fileset dir="src">
+                <include name="**" />
+            </fileset>
+        </phplint>
 
-		<mkdir dir="${logs.dir}" />
-		<exec
-			command="phpunit
+        <mkdir dir="${logs.dir}" />
+        <exec
+                command="phpunit
 				--configuration ${project.basedir}/tests/phpunit/phpunit.xml
 				--log-junit ${logs.dir}/phpunit.xml
 				--coverage-clover ${logs.dir}/phpunit.coverage.xml
 				--coverage-html ${phpunit.coverage.html}"
-			checkreturn="true"
-			logoutput="true"
-		/>
+                checkreturn="true"
+                logoutput="true"
+                />
 
-	</target>
+    </target>
 
-	<!-- ====================================================================================== -->
+    <!-- ====================================================================================== -->
 
-	<target name="checkstyle" description="Check code style">
+    <target name="checkstyle" description="Check code style">
 
-		<!--
-			Check sources for coding standards
-		-->
-		<phpcodesniffer
-			standard="${phpcs.standard}"
-			haltonerror="false"
-		>
-			<formatter
-				type="${phpcs.format}"
-				outfile="${phpcs.output}"
-			/>
-			<fileset dir="src">
-				<include name="**" />
-			</fileset>
-		</phpcodesniffer>
+        <!--
+            Check sources for coding standards
+        -->
+        <phpcodesniffer
+                standard="${phpcs.standard}"
+                haltonerror="false"
+                >
+            <formatter type="${phpcs.format}" outfile="${phpcs.output}" />
+            <fileset dir="src">
+                <include name="**" />
+            </fileset>
+        </phpcodesniffer>
 
-	</target>
+    </target>
 
-	<!-- ====================================================================================== -->
+    <!-- ====================================================================================== -->
 
-	<target name="docs" description="Generate documentation">
+    <target name="docs" description="Generate documentation">
 
-		<delete dir="${docs.dir}" includeemptydirs="true" failonerror="true" />
+        <delete dir="${docs.dir}" includeemptydirs="true" failonerror="false" />
+        <mkdir dir="${docs.dir}" />
 
-		<phpdoc
-			title="Botobor API"
-		  destdir="${docs.dir}"
-		  sourcecode="no"
-			parseprivate="no"
-		  output="${docs.converter}">
-		   <fileset dir="src">
-		      <include name="**/*.php" />
-		   </fileset>
-		   <projdocfileset dir=".">
-		      <include name="README" />
-		      <include name="INSTALL" />
-		      <include name="CHANGELOG" />
-		   </projdocfileset>
-		</phpdoc>
+        <phpdoc2
+            title="Botobor API"
+            destdir="${docs.dir}"
+        >
+            <fileset dir="src">
+                <include name="**/*.php" />
+            </fileset>
+        </phpdoc2>
 
-	</target>
+    </target>
 
-	<!-- ====================================================================================== -->
+    <!-- ====================================================================================== -->
 
 </project>

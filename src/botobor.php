@@ -774,20 +774,16 @@ class Botobor_Keeper
     /**
      * Запрещает создание объектов этого класса другими классами
      */
-    //@codeCoverageIgnoreStart
     private function __construct()
     {
     }
-    //@codeCoverageIgnoreEnd
 
     /**
      * Запрещает клонирование объекта
      */
-    //@codeCoverageIgnoreStart
     private function __clone()
     {
     }
-    //@codeCoverageIgnoreEnd
 
     /**
      * Проверяет поля-приманки
